@@ -1,0 +1,17 @@
+*.iml
+/Mobile/.gradle
+/Mobile/local.properties
+/Mobile/.idea/caches
+/Mobile/.idea/libraries
+/Mobile/.idea/modules.xml
+/Mobile/.idea/workspace.xml
+/Mobile/.idea/navEditor.xml
+/Mobile/.idea/assetWizardSettings.xml
+/Mobile/.DS_Store
+/Mobile/build
+/Mobile/captures
+/Mobile/.externalNativeBuild
+/Mobile/.cxx
+/Mobile/local.properties
+/PSU_Mobile_Server/Build
+/PSU_Mobile_Server/PSU_Mobile_Server/obj
