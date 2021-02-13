@@ -14,4 +14,6 @@
 /Mobile/.cxx
 /Mobile/local.properties
 /PSU_Mobile_Server/Build
+/PSU_Mobile_Server/PSU_Mobile_Client/obj
 /PSU_Mobile_Server/PSU_Mobile_Server/obj
+/PSU_Mobile_Server/Common/obj

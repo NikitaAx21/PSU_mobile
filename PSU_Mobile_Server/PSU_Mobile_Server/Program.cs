@@ -1,12 +1,11 @@
-﻿using System;
-
-namespace PSU_Mobile_Server
+﻿namespace PSU_Mobile_Server
 {
-	class Program
+	internal class Program
 	{
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			var server = new MobileServer();
+			server.Start();
 		}
 	}
 }
