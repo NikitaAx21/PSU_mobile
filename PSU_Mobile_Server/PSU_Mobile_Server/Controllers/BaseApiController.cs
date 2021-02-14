@@ -13,7 +13,7 @@
 		public string Response { get; protected set; }
 		public int StatusCode { get; protected set; }
 
-		public virtual void ProcessRequest()
+		public virtual void ProcessRequest(string requestContent)
 		{
 
 		}

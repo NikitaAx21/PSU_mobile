@@ -7,9 +7,9 @@
 
 		}
 
-		public override void ProcessRequest()
+		public override void ProcessRequest(string requestContent)
 		{
-			base.ProcessRequest();
+			base.ProcessRequest(requestContent);
 		}
 	}
 }

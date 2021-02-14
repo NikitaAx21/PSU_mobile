@@ -1,10 +1,6 @@
 ﻿using Common;
 using System;
-using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading;
 
 namespace PSU_Mobile_Client
 {
@@ -33,7 +29,7 @@ namespace PSU_Mobile_Client
 			var response = client.PostAsync(baseAddress, request).Result;
 			var result = CommonConstants.StandardEncoding.GetString(response.Content.ReadAsByteArrayAsync().Result);
 			Console.WriteLine(result);
-			
+
 			while (true)
 			{
 				//TODO просто костыль, чтоб не закрывалось окно и не терялся контекст

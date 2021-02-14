@@ -1,5 +1,6 @@
 ﻿using Common;
 using System;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -73,7 +74,7 @@ namespace PSU_Mobile_Server
 						Console.WriteLine("Shutdown requested");
 						_cancellationTokenSource.Cancel();
 					}
-					contextResponse.StatusCode = ProcessRequest(apiAction, out response);
+					contextResponse.StatusCode = ProcessRequest(apiAction, contextRequest.InputStream, out response);
 				}
 
 				// Write the response info
@@ -92,7 +93,7 @@ namespace PSU_Mobile_Server
 			}
 		}
 
-		private static int ProcessRequest(string apiAction, out string response)
+		private static int ProcessRequest(string apiAction, Stream inputStream, out string response)
 		{
 			var isMethodImplemented =
 				ApiControllersInitializer.Instance.RequestToControllersDictionary.TryGetValue(apiAction,
@@ -104,9 +105,24 @@ namespace PSU_Mobile_Server
 				return 501;
 			}
 
-			processor.ProcessRequest();
+			var requestContent = GetRequestContent(inputStream);
+			processor.ProcessRequest(requestContent);
 			response = processor.Response;
 			return processor.StatusCode;
+		}
+
+		private static string GetRequestContent(Stream inputStream)
+		{
+			byte[] buffer;
+			using (var ms = new MemoryStream())
+			{
+				inputStream.CopyTo(ms);
+				ms.Position = 0;
+				buffer = ms.ToArray();
+			}
+
+			var content = CommonConstants.StandardEncoding.GetString(buffer);
+			return content;
 		}
 	}
 }
