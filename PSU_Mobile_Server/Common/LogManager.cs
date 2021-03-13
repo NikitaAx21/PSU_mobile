@@ -11,7 +11,7 @@ namespace Common
 
 		public static async void WriteError(Exception e, string additionInfo)
 		{
-			var fileName = $"ERROR_{ProgramsStartDateTimeLocal:yyyy-MM-dd_hh-mm-ss}.txt";
+			var fileName = $"ERROR_{ProgramsStartDateTimeLocal:yyyy-MM-dd_HH-mm-ss}.txt";
 			var errorString = $"ERROR\n{additionInfo}\n{e?.Message}\nStackTrace: {e?.StackTrace}";
 
 			Console.Write(errorString);

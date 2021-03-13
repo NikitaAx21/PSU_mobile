@@ -1,7 +1,12 @@
 ﻿using Common;
+using PSU_Mobile_Server.Controllers;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Sockets;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,39 +14,64 @@ namespace PSU_Mobile_Server
 {
 	internal class MobileServer
 	{
-		private readonly HttpListener _listener;
-		private static int _requestCount = 0;
+		private static long _requestCount = 0;
 
+		private readonly HttpListener _listener;
 		private readonly CancellationTokenSource _cancellationTokenSource;
 
-		public MobileServer()
+		private MobileServer()
 		{
 			_listener = new HttpListener();
 			_cancellationTokenSource = new CancellationTokenSource();
+			ShutdownProcessor.Initialize(_cancellationTokenSource);
 		}
 
-		public void Start()
+		public static Lazy<MobileServer> Instance { get; } = new Lazy<MobileServer>(new MobileServer());
+
+		public Task ServerProcessingTask { get; private set; }
+
+		public void Start(int[] ports)
 		{
 			Console.WriteLine("Starting a server...");
-			_listener.Prefixes.Add(CommonConstants.Uri);
-			_listener.Start();
-			Console.WriteLine("Server started");
-			var listenTask = HandleIncomingConnections();
-			listenTask.GetAwaiter().GetResult();
 
-			_listener.Close();
-			Console.WriteLine("Server was stopped");
+			var addresses = Dns.GetHostAddresses(Dns.GetHostName()).Where(a => a.AddressFamily == AddressFamily.InterNetwork).ToList();
+			addresses.Add(IPAddress.Loopback);
+			foreach (var port in ports)
+			{
+				addresses.ForEach(ipAddress =>
+					_listener.Prefixes.Add($"http://{ipAddress}:{port}/"));
+			}
+
+			_listener.Start();
+			ServerProcessingTask = HandleIncomingConnections(_cancellationTokenSource.Token);
+			Console.WriteLine("Server started");
 		}
 
-		public async Task HandleIncomingConnections()
+		public void StopServer()
 		{
-			var token = _cancellationTokenSource.Token;
+			Console.WriteLine("Stopping server...");
+			_listener.Close();
+			Auth.Instance.Value.Save();
+			Console.WriteLine("Server stopped");
+		}
+
+		private async Task HandleIncomingConnections(CancellationToken token)
+		{
 			while (!token.IsCancellationRequested)
 			{
-				// Will wait here until we hear from a connection
-				var context = await _listener.GetContextAsync();
+				HttpListenerContext context;
+				try
+				{
+					context = await _listener.GetContextAsync();
+				}
+				catch (Exception e)
+				{
+					//Костыль. Считаем, что ситуация нормальная и соответсвует команде выключения сервера
+					//TODO: возможно, есть ещё какие-то ситуации, на которые нужно адекватно реагировать
+					return;
+				}
 
-				var task = new Task(() => ProcessConnection(context, token), token, TaskCreationOptions.LongRunning);
+				var task = new Task(() => ProcessConnection(context, token), TaskCreationOptions.LongRunning);
 				task.Start();
 			}
 		}
@@ -50,42 +80,12 @@ namespace PSU_Mobile_Server
 		{
 			try
 			{
-				var contextRequest = context.Request;
-				var contextResponse = context.Response;
-
-				var response = string.Empty;
-
-				// Print out some info about the request
-				Console.WriteLine("Request #: {0}", ++_requestCount);
-				Console.WriteLine(contextRequest.Url.ToString());
-				Console.WriteLine(contextRequest.HttpMethod);
-				Console.WriteLine(contextRequest.UserHostName);
-				Console.WriteLine(contextRequest.UserAgent);
-				Console.WriteLine();
-
-				// If `shutdown` url requested w/ POST, then shutdown the server after serving the page
-				if (contextRequest.HttpMethod == "POST")
-				{
-					var apiAction = contextRequest.Headers["Method"];
-
-					//TODO: тупо костылейшн. Обязательна авторизация перед такими запросами! Но у нас её пока нет, потому так
-					if (apiAction == "shutdown")
-					{
-						Console.WriteLine("Shutdown requested");
-						_cancellationTokenSource.Cancel();
-					}
-					contextResponse.StatusCode = ProcessRequest(apiAction, contextRequest.InputStream, out response);
-				}
-
-				// Write the response info
-				var data = CommonConstants.StandardEncoding.GetBytes(response);
-				contextResponse.ContentType = "text/html";
-				contextResponse.ContentEncoding = CommonConstants.StandardEncoding;
-				contextResponse.ContentLength64 = data.LongLength;
-
-				// Write out to the response stream (asynchronously), then close it
-				await contextResponse.OutputStream.WriteAsync(data.AsMemory(0, data.Length), token);
-				contextResponse.Close();
+				await ProcessConnectionAsync(context);
+				token.ThrowIfCancellationRequested();
+			}
+			catch (OperationCanceledException)
+			{
+				StopServer();
 			}
 			catch (Exception ex)
 			{
@@ -93,36 +93,100 @@ namespace PSU_Mobile_Server
 			}
 		}
 
-		private static int ProcessRequest(string apiAction, Stream inputStream, out string response)
+		private static async Task ProcessConnectionAsync(HttpListenerContext context)
 		{
-			var isMethodImplemented =
-				ApiControllersInitializer.Instance.RequestToControllersDictionary.TryGetValue(apiAction,
-					out var processor);
-			if (!isMethodImplemented)
+			var contextRequest = context.Request;
+			var contextResponse = context.Response;
+
+			var response = string.Empty;
+
+			Console.WriteLine($"Request #{++_requestCount}");
+			Console.WriteLine($"Client IP: {contextRequest.RemoteEndPoint}");
+			Console.WriteLine($"Client UserAgent: {contextRequest.UserAgent}");
+
+			var postHttpMethod = HttpMethod.Post.Method;
+			if (!contextRequest.HttpMethod.Equals(postHttpMethod))
 			{
-				Console.WriteLine($"Unsupported method {apiAction}");
-				response = $"Unsupported method {apiAction}";
-				return 501;
+				Console.WriteLine($"Http method wasn't {postHttpMethod}");
+			}
+			else
+			{
+				contextResponse.StatusCode = (int)ProcessRequest(contextRequest.InputStream, out response);
 			}
 
-			var requestContent = GetRequestContent(inputStream);
-			processor.ProcessRequest(requestContent);
-			response = processor.Response;
-			return processor.StatusCode;
+			contextResponse.ContentType = "application/json";
+			contextResponse.ContentEncoding = CommonConstants.StandardEncoding;
+
+			var encryptedData = await CryptHelper.EncryptAndBase64(CryptHelper.MasterPass, response);
+			var data = CommonConstants.StandardEncoding.GetBytes(encryptedData);
+			contextResponse.ContentLength64 = data.LongLength;
+			await contextResponse.OutputStream.WriteAsync(data.AsMemory(0, data.Length));
+
+			contextResponse.Close();
+
+			Console.WriteLine();
 		}
 
-		private static string GetRequestContent(Stream inputStream)
+		private static HttpStatusCode ProcessRequest(Stream inputStream, out string response)
+		{
+			response = string.Empty;
+
+			try
+			{
+				var request = GetRequest(inputStream);
+				if (request == null)
+				{
+					Console.WriteLine("Bad request");
+					return HttpStatusCode.BadRequest;
+				}
+
+				if (!Auth.Instance.Value.IsAuthorized(request.UserInfo))
+				{
+					Console.WriteLine($"Unauthorized user \"{request.UserInfo.UserName}\"");
+					return HttpStatusCode.Unauthorized;
+				}
+
+				var apiAction = request.ApiMethod;
+				var isMethodImplemented = ApiControllersInitializer.Instance.
+					RequestToControllersDictionary.TryGetValue(apiAction.ToLowerInvariant(), out var processor);
+				if (!isMethodImplemented)
+				{
+					Console.WriteLine($"Unsupported method {apiAction}");
+					return HttpStatusCode.NotImplemented;
+				}
+
+				if (!Auth.Instance.Value.HasUserPermission(request.UserInfo, apiAction))
+				{
+					Console.WriteLine($"User \"{request.UserInfo.UserName}\" not permitted to \"{apiAction}\"");
+					return HttpStatusCode.Forbidden;
+				}
+
+				Console.WriteLine($"User: \"{request.UserInfo.UserName}\"{Environment.NewLine}Method: \"{apiAction}\"");
+				processor.ProcessRequest(request.RequestContent);
+				response = processor.Response;
+				return processor.StatusCode;
+			}
+			catch (Exception e)
+			{
+				LogManager.WriteError(e, "Error while processing request");
+				return HttpStatusCode.InternalServerError;
+			}
+		}
+
+		private static Request GetRequest(Stream inputStream)
 		{
 			byte[] buffer;
 			using (var ms = new MemoryStream())
 			{
-				inputStream.CopyTo(ms);
+				inputStream.CopyToAsync(ms);
 				ms.Position = 0;
 				buffer = ms.ToArray();
 			}
 
-			var content = CommonConstants.StandardEncoding.GetString(buffer);
-			return content;
+			var encryptedRequest = CommonConstants.StandardEncoding.GetString(buffer);
+			var request = CryptHelper.DecryptBased64(CryptHelper.MasterPass, encryptedRequest).Result;
+			var deserializedRequest = JsonSerializer.Deserialize<Request>(request);
+			return deserializedRequest;
 		}
 	}
 }
