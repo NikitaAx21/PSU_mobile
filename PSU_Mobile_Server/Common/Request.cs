@@ -7,8 +7,8 @@ namespace Common
 		[JsonPropertyName("User")]
 		public UserInfo UserInfo { get; set; }
 
-		[JsonPropertyName("Content")]
-		public string RequestContent { get; set; }
+		[JsonPropertyName("ContentInfo")]
+		public byte[] ContentInfo { get; set; }
 		
 		[JsonPropertyName("Method")]
 		public string ApiMethod { get; set; }

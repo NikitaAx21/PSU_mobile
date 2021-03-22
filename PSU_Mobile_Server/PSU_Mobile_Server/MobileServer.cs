@@ -98,7 +98,7 @@ namespace PSU_Mobile_Server
 			var contextRequest = context.Request;
 			var contextResponse = context.Response;
 
-			var response = string.Empty;
+			var response = Stream.Null;
 
 			Console.WriteLine($"Request #{++_requestCount}");
 			Console.WriteLine($"Client IP: {contextRequest.RemoteEndPoint}");
@@ -111,39 +111,45 @@ namespace PSU_Mobile_Server
 			}
 			else
 			{
-				contextResponse.StatusCode = (int)ProcessRequest(contextRequest.InputStream, out response);
+				if (!contextRequest.Headers.AllKeys.Contains(CommonConstants.RequestInfoHeaderName))
+				{
+					Console.WriteLine($"Headers hasn't {CommonConstants.RequestInfoHeaderName}");
+				}
+				else
+				{
+					var rawRequestInfo = contextRequest.Headers[CommonConstants.RequestInfoHeaderName];
+					HttpStatusCode code;
+					(code, response) = ProcessRequest(contextRequest.InputStream, rawRequestInfo);
+					contextResponse.StatusCode = (int)code;
+				}
 			}
 
 			contextResponse.ContentType = "application/json";
 			contextResponse.ContentEncoding = CommonConstants.StandardEncoding;
 
-			var encryptedData = await CryptHelper.EncryptAndBase64(CryptHelper.MasterPass, response);
-			var data = CommonConstants.StandardEncoding.GetBytes(encryptedData);
-			contextResponse.ContentLength64 = data.LongLength;
-			await contextResponse.OutputStream.WriteAsync(data.AsMemory(0, data.Length));
+			await using var encryptedData = await CryptHelper.EncryptAndBase64(CryptHelper.MasterPass, response);
+			contextResponse.ContentLength64 = encryptedData.Length;
+			await encryptedData.CopyToAsync(contextResponse.OutputStream);
 
 			contextResponse.Close();
-
 			Console.WriteLine();
 		}
 
-		private static HttpStatusCode ProcessRequest(Stream inputStream, out string response)
+		private static (HttpStatusCode, Stream) ProcessRequest(Stream inputStream, string rawRequestInfo)
 		{
-			response = string.Empty;
-
 			try
 			{
-				var request = GetRequest(inputStream);
-				if (request == null)
+				var request = GetRequest(rawRequestInfo);
+				if (string.IsNullOrEmpty(request?.UserInfo?.UserName) || string.IsNullOrEmpty(request.ApiMethod))
 				{
 					Console.WriteLine("Bad request");
-					return HttpStatusCode.BadRequest;
+					return (HttpStatusCode.BadRequest, Stream.Null);
 				}
 
 				if (!Auth.Instance.Value.IsAuthorized(request.UserInfo))
 				{
 					Console.WriteLine($"Unauthorized user \"{request.UserInfo.UserName}\"");
-					return HttpStatusCode.Unauthorized;
+					return (HttpStatusCode.Unauthorized, Stream.Null);
 				}
 
 				var apiAction = request.ApiMethod;
@@ -152,41 +158,38 @@ namespace PSU_Mobile_Server
 				if (!isMethodImplemented)
 				{
 					Console.WriteLine($"Unsupported method {apiAction}");
-					return HttpStatusCode.NotImplemented;
+					return (HttpStatusCode.NotImplemented, Stream.Null);
 				}
 
 				if (!Auth.Instance.Value.HasUserPermission(request.UserInfo, apiAction))
 				{
 					Console.WriteLine($"User \"{request.UserInfo.UserName}\" not permitted to \"{apiAction}\"");
-					return HttpStatusCode.Forbidden;
+					return (HttpStatusCode.Forbidden, Stream.Null);
 				}
 
 				Console.WriteLine($"User: \"{request.UserInfo.UserName}\"{Environment.NewLine}Method: \"{apiAction}\"");
-				processor.ProcessRequest(request.RequestContent);
-				response = processor.Response;
-				return processor.StatusCode;
+
+				var decryptedContent = CryptHelper.Decrypt(CryptHelper.MasterPass, inputStream).Result;
+				return processor.ProcessRequest(request.ContentInfo, decryptedContent);
 			}
 			catch (Exception e)
 			{
 				LogManager.WriteError(e, "Error while processing request");
-				return HttpStatusCode.InternalServerError;
+				return (HttpStatusCode.InternalServerError, Stream.Null);
 			}
 		}
 
-		private static Request GetRequest(Stream inputStream)
+		private static Request GetRequest(string rawRequestInfo)
 		{
-			byte[] buffer;
-			using (var ms = new MemoryStream())
+			try
 			{
-				inputStream.CopyToAsync(ms);
-				ms.Position = 0;
-				buffer = ms.ToArray();
+				var result = CryptHelper.DecryptBased64(CryptHelper.MasterPass, rawRequestInfo).Result;
+				return JsonSerializer.Deserialize<Request>(result);
 			}
-
-			var encryptedRequest = CommonConstants.StandardEncoding.GetString(buffer);
-			var request = CryptHelper.DecryptBased64(CryptHelper.MasterPass, encryptedRequest).Result;
-			var deserializedRequest = JsonSerializer.Deserialize<Request>(request);
-			return deserializedRequest;
+			catch
+			{
+				return null;
+			}
 		}
 	}
 }

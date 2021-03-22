@@ -1,4 +1,7 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Net;
+using System.Threading;
+using Common;
 
 namespace PSU_Mobile_Server.Controllers
 {
@@ -13,11 +16,11 @@ namespace PSU_Mobile_Server.Controllers
 			_shutdownTokenSource = shutdownTokenSource;
 		}
 
-		public override void ProcessRequest(string requestContent)
+		public override (HttpStatusCode, Stream) ProcessRequest(byte[] contentInfo, Stream requestContent)
 		{
-			Response = "Server stopped";
+			var response = new MemoryStream(CommonConstants.StandardEncoding.GetBytes("Server stopped"));
 			_shutdownTokenSource.Cancel();
-			base.ProcessRequest(requestContent);
+			return (HttpStatusCode.OK, response);
 		}
 	}
 }

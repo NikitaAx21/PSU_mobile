@@ -1,4 +1,8 @@
-﻿namespace PSU_Mobile_Server.Controllers
+﻿using System.IO;
+using System.Net;
+using System.Threading.Tasks;
+
+namespace PSU_Mobile_Server.Controllers
 {
 	internal class GetGroupProcessor : BaseApiController
 	{
@@ -7,9 +11,9 @@
 
 		}
 
-		public override void ProcessRequest(string requestContent)
+		public override (HttpStatusCode, Stream) ProcessRequest(byte[] contentInfo, Stream requestContent)
 		{
-			base.ProcessRequest(requestContent);
+			return base.ProcessRequest(contentInfo, requestContent);
 		}
 	}
 }

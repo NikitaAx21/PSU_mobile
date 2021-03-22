@@ -1,7 +1,9 @@
 ﻿using Common;
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 
 namespace PSU_Mobile_Client
@@ -42,17 +44,28 @@ namespace PSU_Mobile_Client
 				PasswordHash = AuthHelper.HashPassword(CommonConstants.SuperPass),
 				UserName = CommonConstants.SuperUser
 			};
+
+			using var reqContent = new MemoryStream(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(newUserInfo)));
+
+			//using var reqContent = File.OpenRead(@"D:\metanit.zip");
+			//var content = encryptedFile;
+
+			//var fileName = $"metanit_{new Random().Next()}.zip";
 			var req = new Request
 			{
 				UserInfo = userInfo,
 				ApiMethod = "CreateUser",
-				RequestContent = JsonSerializer.Serialize(newUserInfo)
+				//Method = "SaveFile",
+				ContentInfo = CryptHelper.Encrypt(CryptHelper.MasterPass, string.Empty).Result
+				//ContentInfo = CommonConstants.StandardEncoding.GetBytes(fileName)
 			};
+			var serializedReq = JsonSerializer.Serialize(req);
+			var encryptedReq = CryptHelper.EncryptAndBase64(CryptHelper.MasterPass, serializedReq).Result;
+			var encryptedRequest = CryptHelper.Encrypt(CryptHelper.MasterPass, reqContent).Result;
 
-			var requestString = JsonSerializer.Serialize(req);
-			var encryptedRequest = CryptHelper.EncryptAndBase64(CryptHelper.MasterPass, requestString).Result;
-
-			var response = client.PostAsync(baseAddress, new StringContent(encryptedRequest)).Result;
+			var cont = new StreamContent(encryptedRequest);
+			cont.Headers.Add(CommonConstants.RequestInfoHeaderName, encryptedReq);
+			var response = client.PostAsync(baseAddress, cont).Result;
 			var encryptedResult = CommonConstants.StandardEncoding.GetString(response.Content.ReadAsByteArrayAsync().Result);
 			var result = CryptHelper.DecryptBased64(CryptHelper.MasterPass, encryptedResult).Result;
 			Console.WriteLine($"StatusCode: {response.StatusCode}");

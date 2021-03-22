@@ -50,8 +50,8 @@ namespace PSU_Mobile_Server
 		{
 			lock (Lock)
 			{
-				var usersWithSameLogin = _users.Where(u => u.UserName == user.UserName).ToList();
-				if (usersWithSameLogin.Count != 1)
+				var usersWithSameLogin = _users.Where(u => u.UserName == user.UserName);
+				if (usersWithSameLogin.Count() != 1)
 					return false;
 
 				var userProfile = usersWithSameLogin.First();
@@ -66,8 +66,8 @@ namespace PSU_Mobile_Server
 		{
 			lock (Lock)
 			{
-				var usersWithSameLogin = _users.Where(u => u.UserName == user.UserName).ToList();
-				if (usersWithSameLogin.Count != 1)
+				var usersWithSameLogin = _users.Where(u => u.UserName == user.UserName);
+				if (usersWithSameLogin.Count() != 1)
 					return false;
 
 				var userProfile = usersWithSameLogin.First();

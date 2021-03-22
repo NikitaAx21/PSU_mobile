@@ -1,7 +1,5 @@
 ﻿using Common;
 using System;
-using System.Diagnostics;
-using System.Reflection;
 
 namespace PSU_Mobile_Server
 {
@@ -13,7 +11,6 @@ namespace PSU_Mobile_Server
 			AppDomain.CurrentDomain.ProcessExit += OnProcessExiting;
 			try
 			{
-				
 				server = MobileServer.Instance.Value;
 				server.Start(new[] { CommonConstants.Port });
 				server.ServerProcessingTask.GetAwaiter().GetResult();
@@ -30,7 +27,14 @@ namespace PSU_Mobile_Server
 
 		private static void OnProcessExiting(object sender, EventArgs e)
 		{
-			Auth.Instance.Value.Save();
+			try
+			{
+				Auth.Instance.Value.Save();
+			}
+			catch (Exception ex)
+			{
+				LogManager.WriteError(ex, "Error while closing server");
+			}
 		}
 	}
 }

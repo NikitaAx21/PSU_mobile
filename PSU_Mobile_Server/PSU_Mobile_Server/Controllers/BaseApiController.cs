@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.IO;
+using System.Net;
+using Common;
 
 namespace PSU_Mobile_Server.Controllers
 {
@@ -7,17 +9,14 @@ namespace PSU_Mobile_Server.Controllers
 		protected BaseApiController(string requestName)
 		{
 			RequestName = requestName;
-			StatusCode = HttpStatusCode.OK;
-			Response = "С запросом все круто!";
 		}
 
 		public string RequestName { get; }
-		public string Response { get; protected set; }
-		public HttpStatusCode StatusCode { get; protected set; }
 
-		public virtual void ProcessRequest(string requestContent)
+		public virtual (HttpStatusCode, Stream) ProcessRequest(byte[] contentInfo, Stream requestContent)
 		{
-
+			var response = new MemoryStream(CommonConstants.StandardEncoding.GetBytes("С запросом все круто!"));
+			return (HttpStatusCode.OK, response);
 		}
 	}
 }
