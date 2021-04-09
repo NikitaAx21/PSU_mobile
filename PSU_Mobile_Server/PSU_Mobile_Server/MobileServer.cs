@@ -127,7 +127,7 @@ namespace PSU_Mobile_Server
 			contextResponse.ContentType = "application/json";
 			contextResponse.ContentEncoding = CommonConstants.StandardEncoding;
 
-			await using var encryptedData = await CryptHelper.EncryptAndBase64(CryptHelper.MasterPass, response);
+			await using var encryptedData = await CryptHelper.Encrypt(CryptHelper.MasterPass, response);
 			contextResponse.ContentLength64 = encryptedData.Length;
 			await encryptedData.CopyToAsync(contextResponse.OutputStream);
 

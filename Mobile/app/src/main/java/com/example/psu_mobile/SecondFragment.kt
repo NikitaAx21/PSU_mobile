@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import java.io.ByteArrayInputStream
 import java.net.URL
 import kotlin.random.Random
 
@@ -55,11 +56,14 @@ class SecondFragment : Fragment() {
 
         val req = Request()
         req.User = authHelper.getSuperUserInfo()
-        req.Content = reqContent
         req.Method = reqMethod
+        var seq = ByteArrayInputStream(reqContent.toByteArray())
 
 //TODO (Никита): костыль тупо хардкод локального адреса моего (Никита) компа. Нужно будет продумать этот момент
         val mURL = URL("http://192.168.50.224:8888")
-        RequestProcessor().sendRequest(req, mURL)
+        val response = RequestProcessor().sendRequest(req, seq, mURL)
+//TODO (Никита): пример получения текстового ответа. Файлы, конечно, в массивы байт перегонять не стоит
+        val r = String(response.toByteArray())
+        println("Response : $r")
     }
 }

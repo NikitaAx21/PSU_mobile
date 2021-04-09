@@ -66,8 +66,7 @@ namespace PSU_Mobile_Client
 			var cont = new StreamContent(encryptedRequest);
 			cont.Headers.Add(CommonConstants.RequestInfoHeaderName, encryptedReq);
 			var response = client.PostAsync(baseAddress, cont).Result;
-			var encryptedResult = CommonConstants.StandardEncoding.GetString(response.Content.ReadAsByteArrayAsync().Result);
-			var result = CryptHelper.DecryptBased64(CryptHelper.MasterPass, encryptedResult).Result;
+			var result = CryptHelper.Decrypt(CryptHelper.MasterPass, response.Content.ReadAsByteArrayAsync().Result).Result;
 			Console.WriteLine($"StatusCode: {response.StatusCode}");
 			Console.WriteLine($"Response: {result}");
 
