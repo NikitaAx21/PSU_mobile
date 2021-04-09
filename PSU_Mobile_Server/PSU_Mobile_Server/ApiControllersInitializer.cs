@@ -17,7 +17,7 @@ namespace PSU_Mobile_Server
 			var types = allTypes.Where(t => t.IsSubclassOf(typeof(BaseApiController)));
 			var baseApiControllers = types.Select(Activator.CreateInstance).Cast<BaseApiController>();
 
-			RequestToControllersDictionary = baseApiControllers.ToDictionary(c => c.RequestName, c => c);
+			RequestToControllersDictionary = baseApiControllers.ToDictionary(c => c.RequestName.ToLowerInvariant(), c => c);
 		}
 	}
 }

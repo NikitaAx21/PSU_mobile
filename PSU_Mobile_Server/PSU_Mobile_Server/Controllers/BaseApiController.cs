@@ -1,21 +1,22 @@
-﻿namespace PSU_Mobile_Server.Controllers
+﻿using System.IO;
+using System.Net;
+using Common;
+
+namespace PSU_Mobile_Server.Controllers
 {
 	internal abstract class BaseApiController
 	{
 		protected BaseApiController(string requestName)
 		{
 			RequestName = requestName;
-			StatusCode = 200;
-			Response = "С запросом все круто!";
 		}
 
 		public string RequestName { get; }
-		public string Response { get; protected set; }
-		public int StatusCode { get; protected set; }
 
-		public virtual void ProcessRequest(string requestContent)
+		public virtual (HttpStatusCode, Stream) ProcessRequest(byte[] contentInfo, Stream requestContent)
 		{
-
+			var response = new MemoryStream(CommonConstants.StandardEncoding.GetBytes("С запросом все круто!"));
+			return (HttpStatusCode.OK, response);
 		}
 	}
 }
