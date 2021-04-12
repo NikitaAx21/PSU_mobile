@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/qrcode"
+        android:icon="@android:drawable/ic_menu_camera"
+        android:iconTint="#000000"
+        android:iconTintMode="src_in"
+        android:title="QR-Код" />
+    <item
+        android:id="@+id/googlemaps"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:iconTint="#000000"
+        android:iconTintMode="src_in"
+        android:title="Google maps" />
+</menu>

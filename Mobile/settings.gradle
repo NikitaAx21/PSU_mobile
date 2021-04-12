@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "PSU_Mobile"
+rootProject.name = "test2"

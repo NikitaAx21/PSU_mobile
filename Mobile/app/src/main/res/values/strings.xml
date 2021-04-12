@@ -1,12 +1,14 @@
 <resources>
-    <string name="app_name">PSU_Mobile</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="app_name">test2</string>
+    <string name="title_activity_main">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="default_user_name">Имя Фамилия</string>
+    <string name="default_group">Группа</string>
+    <string name="settings_text_acc">Учетная запись</string>
+    <string name="default_group_sett">Ваша группа. Нажмите для изменения</string>
+    <string name="sett_username_text">Имя. Нажмите для изменения</string>
+    <string name="settings_secname">Фамилия. Нажмите для изменения</string>
+    <string name="settings_futhname">Отчество. Нажмите для изменения</string>
+    <string name="settings_usermail">Почта. Нажмите для изменения</string>
 </resources>

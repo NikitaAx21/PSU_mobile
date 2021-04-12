@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".userinterface.SettingsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/settings_header"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/colorPrimary"
+        android:text="Hello in your settings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_photo"
+            android:layout_width="@dimen/sett_user_photo_width"
+            android:layout_height="@dimen/sett_user_photo_height"
+            android:layout_marginStart="@dimen/sett_horizont_margin"
+            android:src="@drawable/ico_student_2"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="@dimen/sett_border_width"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="@dimen/sett_group_width"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/sett_horizont_margin"
+            android:layout_marginTop="@dimen/sett_group_margin_top"
+            android:text="@string/default_user_name"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/sett_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/user_photo"
+            app:layout_constraintTop_toTopOf="@id/user_photo" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/default_group"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/sett_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/user_name"
+            app:layout_constraintTop_toBottomOf="@id/user_name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/settings_acc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_text_acc"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/sett_text_size"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/sett_group_margin_top"
+        android:layout_marginStart="@dimen/sett_horizont_margin"
+        app:layout_constraintTop_toBottomOf="@id/settings_header" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sett_change_name"
+        app:layout_constraintTop_toBottomOf="@id/settings_acc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/settings_button_style">
+
+        <TextView
+            android:id="@+id/sett_label_name"
+            android:text="@string/sett_username_text"
+            app:layout_constraintTop_toTopOf="@id/sett_change_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/settings_label_style" />
+        <View
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sett_label_name"
+            style="@style/settings_separator_style" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sett_change_secname"
+        app:layout_constraintTop_toBottomOf="@+id/sett_change_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/settings_button_style">
+
+        <TextView
+            android:id="@+id/sett_label_secname"
+            android:text="@string/settings_secname"
+            app:layout_constraintTop_toTopOf="@id/sett_change_secname"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/settings_label_style" />
+        <View
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sett_label_secname"
+            style="@style/settings_separator_style" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sett_change_futhname"
+        app:layout_constraintTop_toBottomOf="@id/sett_change_secname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/settings_button_style">
+
+        <TextView
+            android:id="@+id/sett_label_futhname"
+            android:text="@string/settings_futhname"
+            app:layout_constraintTop_toTopOf="@id/sett_change_futhname"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/settings_label_style" />
+        <View
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sett_label_futhname"
+            style="@style/settings_separator_style" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sett_change_group"
+        app:layout_constraintTop_toBottomOf="@id/sett_change_futhname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/settings_button_style">
+
+        <TextView
+            android:id="@+id/sett_label_group"
+            android:text="@string/default_group_sett"
+            app:layout_constraintTop_toTopOf="@id/sett_change_group"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/settings_label_style" />
+        <View
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sett_label_group"
+            style="@style/settings_separator_style" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sett_change_mail"
+        app:layout_constraintTop_toBottomOf="@id/sett_change_group"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/settings_button_style">
+
+        <TextView
+            android:id="@+id/sett_label_mail"
+            android:text="@string/settings_usermail"
+            app:layout_constraintTop_toTopOf="@id/sett_change_mail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/settings_label_style" />
+        <View
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sett_label_mail"
+            style="@style/settings_separator_style" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/change_user_photo"
+        android:layout_width="@dimen/change_userphoto_width"
+        android:layout_height="@dimen/change_userphoto_height"
+        app:civ_circle_background_color="@color/colorAccent"
+        android:src="@drawable/ico_camera_3"
+        app:civ_border_color="@color/colorPrimaryDark"
+        android:layout_marginRight="@dimen/sett_horizont_margin"
+        app:civ_border_width="@dimen/change_userphoto_border_width"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_header"
+        app:layout_constraintBottom_toBottomOf="@id/settings_header"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

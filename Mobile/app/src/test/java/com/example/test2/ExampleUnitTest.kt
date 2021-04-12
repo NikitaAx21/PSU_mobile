@@ -1,4 +1,4 @@
-package com.example.psu_mobile
+package com.example.test2
 
 import org.junit.Test
 
