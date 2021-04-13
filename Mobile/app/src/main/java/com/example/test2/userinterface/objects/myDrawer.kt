@@ -38,7 +38,7 @@ class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar){
         createHeader()
         createSubDrawer()
     }
-
+    //главная функция тулбара
     private fun createSubDrawer() {
         mDrawer = DrawerBuilder()
             .withActivity(mainActivity)
@@ -90,12 +90,14 @@ class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar){
                 ): Boolean {
                     when (position) {
                         3 -> {
-                            sendPostRequestAsync()
+
                         }
                         4 -> {
                             mainActivity.supportFragmentManager.beginTransaction()
                                 .addToBackStack(null)
-                                .replace(R.id.data_container, BaseFragment(R.layout.fragment_mail))
+                                .replace(
+                                    R.id.data_container,
+                                    BaseFragment(R.layout.fragment_mail))
                                 .commit()
                         }
                         5 -> {
@@ -145,39 +147,4 @@ class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar){
         }
     }
 
-    fun sendPostRequestAsync() {
-        try {
-            //TODO (Никита): Супер костыль - запуск в основном потоке. Нужно сделать асинхронным
-            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-            StrictMode.setThreadPolicy(policy)
-
-//TODO (Никита): Ниже просто пример того, как должны будут устроены запросы. Пока не трогал их. Нужно вынести
-            val authHelper = AuthHelper()
-            val pass = "SomePass"
-            val newUserInfo = UserInfo()
-            newUserInfo.Login = "User_${Random.nextInt()}"
-            newUserInfo.PassHash = authHelper.hashPassword(pass)
-
-            val jsonAdapter =  Moshi.Builder().add(KotlinJsonAdapterFactory()).build().adapter(
-                UserInfo::class.java
-            )
-            val reqContent = jsonAdapter.toJson(newUserInfo)
-            val reqMethod = "CreateUser"
-
-            val req = Request()
-            req.User = authHelper.getSuperUserInfo()
-            req.Method = reqMethod
-            var seq = ByteArrayInputStream(reqContent.toByteArray())
-
-//TODO (Никита): костыль тупо хардкод локального адреса моего (Никита) компа. Нужно будет продумать этот момент
-            val mURL = URL("http://192.168.0.3:8888/")
-            val response = RequestProcessor().sendRequest(req, seq, mURL)
-//TODO (Никита): пример получения текстового ответа. Файлы, конечно, в массивы байт перегонять не стоит
-            val r = String(response.toByteArray())
-            println("Response : $r")
-        }
-        catch (e: NumberFormatException){
-            throw RuntimeException("fuck your: ", e)
-        }
-    }
 }

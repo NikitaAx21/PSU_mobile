@@ -13,4 +13,6 @@
     <dimen name="change_userphoto_height">45dp</dimen>
     <dimen name="change_userphoto_border_width">2dp</dimen>
     <dimen name="sett_fipple_effect_radius">4dp</dimen>
+    <dimen name="sett_username_margin_top">10dp</dimen>
+    <dimen name="up_padding">5dp</dimen>
 </resources>

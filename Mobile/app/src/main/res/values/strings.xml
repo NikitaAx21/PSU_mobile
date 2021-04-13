@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">test2</string>
-    <string name="title_activity_main">Profile</string>
+    <string name="title_activity_main">PSU School</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="default_user_name">Имя Фамилия</string>
@@ -11,4 +11,11 @@
     <string name="settings_secname">Фамилия. Нажмите для изменения</string>
     <string name="settings_futhname">Отчество. Нажмите для изменения</string>
     <string name="settings_usermail">Почта. Нажмите для изменения</string>
+    <string name="settings_action_exit">Выход</string>
+    <string name="settings_action_quest">Помощь</string>
+    <string name="register_login_text">Введите логин:</string>
+    <string name="register_password_text">Введите пароль:</string>
+    <string name="register_title">Авторизация</string>
+    <string name="register_toast_login">Введите логин</string>
+    <string name="register_toast_pass">Введите пароль</string>
 </resources>
