@@ -18,4 +18,15 @@
     <string name="register_title">Авторизация</string>
     <string name="register_toast_login">Введите логин</string>
     <string name="register_toast_pass">Введите пароль</string>
+    <string name="mail_send_to_text">Кому:</string>
+    <string name="mail_subject_text">Teмa:</string>
+    <string name="mail_message_text">Сообщение:</string>
+    <string name="mail_send_to_err">Введите почту получателя</string>
+    <string name="mail_subject_err">Введите тему сообщения</string>
+    <string name="mail_message_err">Введите сообщение</string>
+    <string name="mail_chooser_text">Отправка почты</string>
+    <string name="mail_chooser_err">Ошибка отправления</string>
+    <string name="mail_file_text">Прикрепленный файл:</string>
+    <string name="mail_file_err">Проблемы</string>
+    <string name="add_file_text">Выберите файл</string>
 </resources>

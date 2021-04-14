@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/settings_header"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/constraint_layout_height"
         android:background="@color/colorPrimary"
         android:text="Hello in your settings"
         app:layout_constraintEnd_toEndOf="parent"

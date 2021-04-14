@@ -10,5 +10,6 @@
 
     <color name="colorPrimary">#d45555</color>
     <color name="colorPrimaryDark">#8c2626</color>
+    <color name="colorMiddle">#CD5C5C</color>
     <color name="colorAccent">#ffffff</color>
 </resources>

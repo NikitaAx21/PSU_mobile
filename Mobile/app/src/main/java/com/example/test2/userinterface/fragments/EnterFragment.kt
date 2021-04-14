@@ -15,6 +15,8 @@ import com.example.test2.R
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.android.synthetic.main.fragment_enter.*
+import utilits.replace_fragment
+import utilits.show_toast
 import java.io.ByteArrayInputStream
 import java.net.URL
 import kotlin.random.Random
@@ -28,19 +30,16 @@ class EnterFragment : Fragment(R.layout.fragment_enter) {
 
     private fun send_auth_params() {
         if(register_input_login.text.toString().isEmpty()){
-            Toast.makeText(activity, getString(R.string.register_toast_login), Toast.LENGTH_SHORT).show()
+            show_toast(getString(R.string.register_toast_login))
         }
         else if(register_input_pass.text.toString().isEmpty()){
-            Toast.makeText(activity, getString(R.string.register_toast_pass), Toast.LENGTH_SHORT).show()
+            show_toast(getString(R.string.register_toast_pass))
         }
         else{
             //здесь надо проводить авторизацию со всеми вытекающими
               //дальше этого места приложение не пойдет
-            /*fragmentManager?.beginTransaction()
-                ?.addToBackStack(null)
-                ?.replace(R.id.registerDataContainer, EnterFragment())
-                ?.commit()*/
-            sendPostRequestAsync()
+            //sendPostRequestAsync()
+            replace_fragment(MailFragment())
         }
     }
 

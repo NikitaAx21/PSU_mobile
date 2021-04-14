@@ -1,31 +1,33 @@
 package com.example.test2.userinterface.objects
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat.startActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.psu_mobile.AuthHelper
 import com.example.psu_mobile.Request
 import com.example.psu_mobile.RequestProcessor
 import com.example.psu_mobile.UserInfo
 import com.example.test2.MapsActivity
 import com.example.test2.R
-import com.example.test2.userinterface.fragments.BaseFragment
+import com.example.test2.userinterface.fragments.*
 import com.google.zxing.integration.android.IntentIntegrator
-import com.mikepenz.materialdrawer.AccountHeader
-import com.mikepenz.materialdrawer.AccountHeaderBuilder
-import com.mikepenz.materialdrawer.Drawer
-import com.mikepenz.materialdrawer.DrawerBuilder
+import com.mikepenz.materialdrawer.*
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import utilits.replace_activity
+import utilits.replace_fragment
 import java.io.ByteArrayInputStream
 import java.net.URL
 import kotlin.random.Random
@@ -33,10 +35,34 @@ import kotlin.random.Random
 class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar){
     private lateinit var mDrawer: Drawer
     private lateinit var mHeader: AccountHeader
+    private lateinit var mDrawerLayout: DrawerLayout
 
     public fun createDrawer(){
         createHeader()
         createSubDrawer()
+        mDrawerLayout = mDrawer.drawerLayout
+    }
+
+    //отключаем меню
+    @SuppressLint("RestrictedApi")
+    fun disableDrawer(){
+        mDrawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = false
+        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)//режим блокировки
+        toolbar.setNavigationOnClickListener {
+            mainActivity.supportFragmentManager.popBackStack()
+        }
+    }
+
+    //включаем меню
+    @SuppressLint("RestrictedApi")
+    fun enableDrawer(){
+        mainActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        mDrawer.actionBarDrawerToggle?.isDrawerIndicatorEnabled = true
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        toolbar.setNavigationOnClickListener {
+            mDrawer.openDrawer()
+        }
     }
     //главная функция тулбара
     private fun createSubDrawer() {
@@ -89,32 +115,27 @@ class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar){
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
                     when (position) {
+                        1->{
+                            mainActivity.replace_fragment(NewsFragment())
+                        }
+                        2->{
+                            mainActivity.replace_fragment(TimeTableFragment())
+                        }
                         3 -> {
-
+                            mainActivity.replace_fragment(HomeWorkFragment())
                         }
                         4 -> {
-                            mainActivity.supportFragmentManager.beginTransaction()
-                                .addToBackStack(null)
-                                .replace(
-                                    R.id.data_container,
-                                    BaseFragment(R.layout.fragment_mail))
-                                .commit()
+                            mainActivity.replace_fragment(MailFragment())
                         }
                         5 -> {
                             val scanner = IntentIntegrator(mainActivity)
                             scanner.initiateScan()
                         }
                         6 -> {
-                            val map = Intent(mainActivity, MapsActivity::class.java)
-                            startActivity(mainActivity, map, Bundle.EMPTY)
+                            mainActivity.replace_activity(MapsActivity())
                         }
                         7 -> {
-                            mainActivity.supportFragmentManager.beginTransaction()
-                                .addToBackStack(null)
-                                .replace(
-                                    R.id.data_container,
-                                    BaseFragment(R.layout.fragment_settings)
-                                ).commit()
+                            mainActivity.replace_fragment(SettingsFragment())
                         }
                     }
                     return false

@@ -6,6 +6,8 @@ import android.widget.Toolbar
 import com.example.test2.R
 import com.example.test2.databinding.ActivityRegisterBinding
 import com.example.test2.userinterface.fragments.EnterFragment
+import utilits.replace_activity
+import utilits.replace_fragment
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityRegisterBinding
@@ -22,8 +24,7 @@ class RegisterActivity : AppCompatActivity() {
         mToolbar = mBinding.registerToolBar
         setSupportActionBar(mToolbar)
         title = getString(R.string.register_title)
-        supportFragmentManager.beginTransaction()
-            .add(R.id.registerDataContainer, EnterFragment())
-            .commit()
+
+        replace_fragment(EnterFragment())
     }
 }

@@ -50,9 +50,9 @@
     <style name="settings_label_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textSize">@dimen/sett_text_size</item>
-        <item name="android:textStyle">italic</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:layout_marginStart">@dimen/sett_horizont_margin</item>
     </style>
 
@@ -84,6 +84,20 @@
         <item name="android:backgroundTint">@color/colorPrimary</item>
         <item name="android:autofillHints">""</item>
         <item name="android:inputType">phone</item>
+    </style>
+
+    <style name="mail_edit_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/sett_text_size</item>
+        <item name="android:layout_margin">@dimen/sett_horizont_margin</item>
+        <item name="android:padding">@dimen/up_padding</item>
+        <item name="android:gravity">left</item>
+        <item name="android:hint">""</item>
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:autofillHints">""</item>
+        <item name="android:inputType">textMultiLine</item>
     </style>
 
     <style name="main_tool_bar">

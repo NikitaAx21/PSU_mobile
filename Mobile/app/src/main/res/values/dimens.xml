@@ -15,4 +15,6 @@
     <dimen name="sett_fipple_effect_radius">4dp</dimen>
     <dimen name="sett_username_margin_top">10dp</dimen>
     <dimen name="up_padding">5dp</dimen>
+    <dimen name="constraint_layout_height">100dp</dimen>
+    <dimen name="mail_file_name_width">250dp</dimen>
 </resources>
