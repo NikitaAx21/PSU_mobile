@@ -2,7 +2,7 @@
 <resources>
     <dimen name="sett_user_photo_width">55dp</dimen>
     <dimen name="sett_user_photo_height">55dp</dimen>
-    <dimen name="sett_border_width">4dp</dimen>
+    <dimen name="sett_border_width">1dp</dimen>
     <dimen name="sett_horizont_margin">16dp</dimen>
     <dimen name="sett_group_margin_top">30dp</dimen>
     <dimen name="sett_separator_margin_top">10dp</dimen>
@@ -11,10 +11,11 @@
     <dimen name="sett_group_width">0dp</dimen>
     <dimen name="change_userphoto_width">45dp</dimen>
     <dimen name="change_userphoto_height">45dp</dimen>
-    <dimen name="change_userphoto_border_width">2dp</dimen>
+    <dimen name="change_userphoto_border_width">1dp</dimen>
     <dimen name="sett_fipple_effect_radius">4dp</dimen>
     <dimen name="sett_username_margin_top">10dp</dimen>
     <dimen name="up_padding">5dp</dimen>
     <dimen name="constraint_layout_height">100dp</dimen>
     <dimen name="mail_file_name_width">250dp</dimen>
+    <dimen name="coordinates_text_width">300dp</dimen>
 </resources>

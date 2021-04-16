@@ -1,4 +1,4 @@
-package com.example.test2.utilits
+package com.example.psu_school.utilits
 
 import android.text.Editable
 import android.text.TextWatcher

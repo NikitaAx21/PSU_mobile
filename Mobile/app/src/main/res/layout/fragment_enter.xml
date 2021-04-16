@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userinterface.fragments.EnterFragment">
+    tools:context="com.example.psu_school.userinterface.fragments.EnterFragment">
 
     <TextView
         android:id="@+id/register_login_text"

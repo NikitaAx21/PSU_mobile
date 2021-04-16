@@ -1,4 +1,4 @@
-package com.example.test2
+package com.example.psu_school
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -14,15 +14,17 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import android.widget.*
 import androidx.core.app.ActivityCompat
+import com.example.psu_mobile.UserInfo
+import com.example.psu_school.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.android.synthetic.main.activity_maps.*
 
 public class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var map: GoogleMap? = null
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var lastKnownLocation: Location? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,10 +69,12 @@ public class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     if (task.isSuccessful) {
                         lastKnownLocation = task.result
                         lastKnownLocation?.let{
-                            map?.moveCamera(CameraUpdateFactory.newLatLng(
-                                LatLng(it.latitude,
-                                    it.longitude)))
+                            map?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
                             map?.addMarker(MarkerOptions().position(LatLng(it.latitude,it.longitude)).title("Вы здесь!"))
+                            map?.setOnMapClickListener(GoogleMap.OnMapClickListener {
+                                coordinates_text_name.setText("Широта: " + lastKnownLocation?.latitude.toString()
+                                        + " Долгота: " + lastKnownLocation?.longitude.toString())
+                            })
                         }
                     } else {
                         map?.uiSettings?.isMyLocationButtonEnabled = false

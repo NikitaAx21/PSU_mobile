@@ -3,7 +3,6 @@
 package utilits
 
 import android.content.Intent
-import android.database.Cursor
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.view.View
@@ -11,11 +10,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.test2.R
-import com.example.test2.utilits.app_text_watcher
+import com.example.psu_school.R
+import com.example.psu_school.utilits.app_text_watcher
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.fragment_mail.*
 
 
 //показывает сообщение во фрагментах

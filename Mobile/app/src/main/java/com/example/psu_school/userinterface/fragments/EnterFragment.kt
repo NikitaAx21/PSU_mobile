@@ -1,17 +1,12 @@
-package com.example.test2.userinterface.fragments
+package com.example.psu_school.userinterface.fragments
 
-import android.os.Bundle
 import android.os.StrictMode
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import com.example.psu_mobile.AuthHelper
 import com.example.psu_mobile.Request
 import com.example.psu_mobile.RequestProcessor
 import com.example.psu_mobile.UserInfo
-import com.example.test2.R
+import com.example.psu_school.R
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.android.synthetic.main.fragment_enter.*

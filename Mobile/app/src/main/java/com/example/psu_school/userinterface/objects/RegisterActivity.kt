@@ -1,12 +1,10 @@
-package com.example.test2.userinterface.objects
+package com.example.psu_school.userinterface.objects
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toolbar
-import com.example.test2.R
-import com.example.test2.databinding.ActivityRegisterBinding
-import com.example.test2.userinterface.fragments.EnterFragment
-import utilits.replace_activity
+import com.example.psu_school.R
+import com.example.psu_school.databinding.ActivityRegisterBinding
+import com.example.psu_school.userinterface.fragments.EnterFragment
 import utilits.replace_fragment
 
 class RegisterActivity : AppCompatActivity() {

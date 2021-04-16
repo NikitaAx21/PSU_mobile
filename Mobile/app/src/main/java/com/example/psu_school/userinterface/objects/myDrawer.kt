@@ -1,36 +1,23 @@
-package com.example.test2.userinterface.objects
+package com.example.psu_school.userinterface.objects
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.os.Bundle
-import android.os.StrictMode
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat.startActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.psu_mobile.AuthHelper
-import com.example.psu_mobile.Request
-import com.example.psu_mobile.RequestProcessor
-import com.example.psu_mobile.UserInfo
-import com.example.test2.MapsActivity
-import com.example.test2.R
-import com.example.test2.userinterface.fragments.*
+import com.example.psu_school.MapsActivity
+import com.example.psu_school.userinterface.fragments.*
+import com.example.psu_school.R
 import com.google.zxing.integration.android.IntentIntegrator
 import com.mikepenz.materialdrawer.*
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import utilits.replace_activity
 import utilits.replace_fragment
-import java.io.ByteArrayInputStream
-import java.net.URL
-import kotlin.random.Random
 
 class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar){
     private lateinit var mDrawer: Drawer

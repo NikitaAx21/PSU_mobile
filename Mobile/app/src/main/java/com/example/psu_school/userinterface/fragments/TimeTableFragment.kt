@@ -1,12 +1,6 @@
-package com.example.test2.userinterface.fragments
+package com.example.psu_school.userinterface.fragments
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.example.test2.R
-import kotlinx.android.synthetic.main.fragment_news.*
+import com.example.psu_school.R
 import kotlinx.android.synthetic.main.fragment_time_table.*
 
 class TimeTableFragment : BaseFragment(R.layout.fragment_time_table) {

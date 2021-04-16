@@ -8,10 +8,9 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
     viewBinding.enabled = true
-    //buildFeatures.viewBinding = true
 
     defaultConfig {
-        applicationId "com.example.test2"
+        applicationId "com.example.psu_school"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
@@ -45,6 +44,7 @@ android {
 }
 
 dependencies {
+
     implementation 'com.squareup.moshi:moshi:1.11.0'
     implementation 'com.squareup.moshi:moshi-kotlin:1.11.0'
     implementation "com.mikepenz:materialdrawer:7.0.0"

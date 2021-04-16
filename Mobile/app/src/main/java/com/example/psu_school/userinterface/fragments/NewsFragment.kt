@@ -1,12 +1,7 @@
-package com.example.test2.userinterface.fragments
+package com.example.psu_school.userinterface.fragments
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.example.test2.R
-import kotlinx.android.synthetic.main.fragment_enter.*
+import com.example.psu_school.R
 import kotlinx.android.synthetic.main.fragment_news.*
 
 class NewsFragment : Fragment(R.layout.fragment_news) {

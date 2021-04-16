@@ -23,7 +23,7 @@
             android:layout_height="@dimen/sett_user_photo_height"
             android:layout_marginStart="@dimen/sett_horizont_margin"
             android:src="@drawable/ico_student_2"
-            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_color="@color/colorAccent"
             app:civ_border_width="@dimen/sett_border_width"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -90,29 +90,29 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/sett_change_secname"
+        android:id="@+id/sett_change_surname"
         app:layout_constraintTop_toBottomOf="@+id/sett_change_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         style="@style/settings_button_style">
 
         <TextView
-            android:id="@+id/sett_label_secname"
+            android:id="@+id/sett_label_surname"
             android:text="@string/settings_secname"
-            app:layout_constraintTop_toTopOf="@id/sett_change_secname"
+            app:layout_constraintTop_toTopOf="@id/sett_change_surname"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             style="@style/settings_label_style" />
         <View
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sett_label_secname"
+            app:layout_constraintTop_toBottomOf="@id/sett_label_surname"
             style="@style/settings_separator_style" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sett_change_futhname"
-        app:layout_constraintTop_toBottomOf="@id/sett_change_secname"
+        app:layout_constraintTop_toBottomOf="@id/sett_change_surname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         style="@style/settings_button_style">
@@ -153,28 +153,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/sett_change_mail"
-        app:layout_constraintTop_toBottomOf="@id/sett_change_group"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        style="@style/settings_button_style">
-
-        <TextView
-            android:id="@+id/sett_label_mail"
-            android:text="@string/settings_usermail"
-            app:layout_constraintTop_toTopOf="@id/sett_change_mail"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            style="@style/settings_label_style" />
-        <View
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sett_label_mail"
-            style="@style/settings_separator_style" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/change_user_photo"
         android:layout_width="@dimen/change_userphoto_width"
@@ -188,4 +166,16 @@
         app:layout_constraintTop_toBottomOf="@id/settings_header"
         app:layout_constraintBottom_toBottomOf="@id/settings_header"
         />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/save_settings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ico_save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="@dimen/sett_horizont_margin"
+        android:contentDescription="TODO" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
