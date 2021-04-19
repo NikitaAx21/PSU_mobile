@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Common;
 
-namespace PSU_Mobile_Server.Controllers
+namespace PSU_Mobile_Server.Controllers//===========----------------
 {
-	internal class AddGroupProcessor : BaseApiController
+	internal class DeleteFileProcessor : BaseApiController
 	{
-		public AddGroupProcessor() : base("AddGroup")
+		public DeleteFileProcessor() : base("AddGroup")
 		{
 
 		}
