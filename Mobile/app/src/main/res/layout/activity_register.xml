@@ -7,7 +7,7 @@
     tools:context="com.example.psu_school.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/mainToolBar"
+        android:id="@+id/registerToolBar"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -19,13 +19,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-       android:layout_height="0dp"
+        android:layout_height="0dp"
         android:layout_width="match_parent"
         android:id="@+id/data_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mainToolBar"
+        app:layout_constraintTop_toBottomOf="@id/registerToolBar"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

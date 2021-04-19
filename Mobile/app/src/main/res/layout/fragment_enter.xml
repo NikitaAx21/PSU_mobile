@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.psu_school.userinterface.fragments.EnterFragment">
+
+    <TextView
+        android:id="@+id/register_login_text"
+        android:text="@string/register_login_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/sett_group_margin_top"
+        style="@style/settings_label_style"/>
+
+    <EditText
+        android:id="@+id/register_input_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/register_login_text"
+        style="@style/register_edit_style"
+        android:autofillHints="" />
+
+    <TextView
+        android:id="@+id/register_password_text"
+        android:text="@string/register_password_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/register_input_login"
+        style="@style/settings_label_style"/>
+
+    <EditText
+        android:id="@+id/register_input_pass"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/register_password_text"
+        style="@style/register_edit_style" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/register_input_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ico_register_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="@dimen/sett_horizont_margin"
+        android:contentDescription="TODO" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
