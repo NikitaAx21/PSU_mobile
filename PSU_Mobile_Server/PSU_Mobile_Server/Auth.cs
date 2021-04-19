@@ -15,10 +15,7 @@ namespace PSU_Mobile_Server
 		private const string _pass = "5T5WQ}n~djZTBf#ZSAK3DGKhz";
 
 		private DataBase BD;
-		public DataBase getBD()
-		{
-			return BD;
-		}
+
 
 
 		private static readonly object Lock = new object();
@@ -130,8 +127,6 @@ namespace PSU_Mobile_Server
 		{
 			lock (Lock)
 			{
-				if (!BD.Users.Select(u => u.ID).Contains(user.ID))
-					return false;
 
 				var userForUpd = BD.Users.FirstOrDefault(u => u.ID == user.ID);
 
@@ -152,7 +147,7 @@ namespace PSU_Mobile_Server
 		{
 			lock (Lock)
 			{
-				user = new User();
+				user = null;
 
 				if (BD.Users.Select(u => u.ID).Contains(ID))
 					return false;
@@ -170,7 +165,7 @@ namespace PSU_Mobile_Server
 		{
 			lock (Lock)
 			{
-				if (BD.Users.Select(u => u.ID).Contains(ID))
+				if (BD.Users.Select(u => u.ID).Contains(ID))//повторяет FirstOrDefault
 					return false;
 
 				var userForDeleting = BD.Users.FirstOrDefault(u => u.ID == ID);
@@ -190,6 +185,11 @@ namespace PSU_Mobile_Server
 			{
 				if (BD.Groups.Select(u => u.GroupName).Contains(newGroup.GroupName))
 					return false;
+
+
+				if (!BD.Groups.Select(u => u.ID).Contains(newGroup.ID))
+					return false;
+
 
 				BD.Groups.Add(new Group
 				{
@@ -214,7 +214,7 @@ namespace PSU_Mobile_Server
 
 				if (groupForUpd == null)
 					return false;
-
+				
 				groupForUpd.GroupName = group.GroupName;
 				groupForUpd.Lessons = group.Lessons;
 				groupForUpd.UserLogins = group.UserLogins;
@@ -266,9 +266,6 @@ namespace PSU_Mobile_Server
 		{
 			lock (Lock)
 			{
-				if (BD.Groups.Select(u => u.ID).Contains(currentGroup))
-					return false;
-
 				var groupForLesson = BD.Groups.FirstOrDefault(u => u.ID == currentGroup);
 
 				if (groupForLesson == null)
@@ -284,7 +281,8 @@ namespace PSU_Mobile_Server
 					TestFlag = newLesson.TestFlag,
 					Date = newLesson.Date,
 					LessonFilesLinks = newLesson.LessonFilesLinks,
-					HomeWorkFilesLinks = newLesson.HomeWorkFilesLinks// ??
+					HomeWorkFilesLinks = newLesson.HomeWorkFilesLinks,// ??
+					Presence = newLesson.Presence
 				});
 
 				return true;
@@ -310,7 +308,7 @@ namespace PSU_Mobile_Server
 
 				var lessonForUpd = groupForLesson.Lessons.FirstOrDefault(u => u.ID == currentGroup);
 
-				if (groupForLesson == null)
+				if (lessonForUpd == null)
 					return false;
 
 				lessonForUpd.TopicName = newLesson.TopicName;
@@ -392,8 +390,7 @@ namespace PSU_Mobile_Server
 			{
 				newPath="";
 
-				if (!BD.Users.Select(u => u.ID).Contains(userID))
-					return false;
+
 
 				var user = BD.Users.FirstOrDefault(u => u.ID == userID);
 
@@ -406,21 +403,18 @@ namespace PSU_Mobile_Server
 					return false;
 
 
-				if (!BD.Groups.Select(u => u.ID).Contains(groupID))
-					return false;
+
 
 				var group = BD.Groups.FirstOrDefault(u => u.ID == groupID);
 
 				if (group == null)
 					return false;
 
-				newPath = group.GroupName;
+				newPath = group.GroupName;//ID?
 
 
 				if (lessonID == Guid.Empty)//??
 				{
-					if (!group.Lessons.Select(u => u.ID).Contains(lessonID))
-						return false;
 
 					var lesson = group.Lessons.FirstOrDefault(u => u.ID == lessonID);
 
@@ -469,7 +463,7 @@ namespace PSU_Mobile_Server
 
 
 
-				newPath += group.GroupName + lesson.TopicName + user.UserName;//??
+				newPath += group.GroupName + "/"+lesson.TopicName +"/"+ user.UserName;//??
 				
 
 				return true;
@@ -507,7 +501,7 @@ namespace PSU_Mobile_Server
 			}
 			catch (Exception e)
 			{
-				LogManager.WriteError(e, "Users loading failed");
+				LogManager.WriteError(e, "BD loading failed");
 				return null;
 			}
 		}
@@ -528,7 +522,7 @@ namespace PSU_Mobile_Server
 			}
 			catch (Exception e)
 			{
-				LogManager.WriteError(e, "Users saving failed");
+				LogManager.WriteError(e, "BD saving failed");
 			}
 		}
 	}

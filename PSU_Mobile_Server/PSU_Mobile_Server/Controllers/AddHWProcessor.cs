@@ -20,11 +20,7 @@ namespace PSU_Mobile_Server.Controllers
 			{
 
 
-				Stream inf = new MemoryStream();
-
-				inf.Read(contentInfo);
-
-				var paramInfo = JsonSerializer.DeserializeAsync<FileProcessorInfo>(inf).Result;
+				var paramInfo = JsonSerializer.Deserialize<FileProcessorInfo>(contentInfo);
 
 
 

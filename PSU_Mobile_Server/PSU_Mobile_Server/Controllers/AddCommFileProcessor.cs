@@ -8,9 +8,9 @@ using Common;
 namespace PSU_Mobile_Server.Controllers
 {
 
-	internal class AddFileProcessor : BaseApiController
+	internal class AddCommFileProcessor : BaseApiController
 	{
-		public AddFileProcessor() : base("AddCommFile")
+		public AddCommFileProcessor() : base("AddCommFile")
 		{
 
 		}
@@ -21,11 +21,8 @@ namespace PSU_Mobile_Server.Controllers
 			{
 
 
-				Stream inf = new MemoryStream();
 
-				inf.Read(contentInfo);
-
-				var paramInfo = JsonSerializer.DeserializeAsync<FileProcessorInfo>(inf).Result;
+				var paramInfo = JsonSerializer.Deserialize<FileProcessorInfo>(contentInfo);
 
 
 				//contentInfo => id's ? 

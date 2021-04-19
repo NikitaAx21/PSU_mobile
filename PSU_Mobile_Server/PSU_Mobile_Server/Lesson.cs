@@ -37,7 +37,7 @@ namespace PSU_Mobile_Server
 
 
 		[JsonPropertyName("Presence")]
-		public Dictionary<string, int?> Presence { get; set; }// определение присутствия и оценок
+		public Dictionary<Guid, int?> Presence { get; set; }// определение присутствия и оценок
 
 	}
 }
