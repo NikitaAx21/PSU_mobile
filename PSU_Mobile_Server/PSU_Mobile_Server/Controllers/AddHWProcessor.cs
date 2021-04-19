@@ -7,10 +7,9 @@ using Common;
 
 namespace PSU_Mobile_Server.Controllers
 {
-
-	internal class AddFileProcessor : BaseApiController
+	internal class AddHWProcessor : BaseApiController
 	{
-		public AddFileProcessor() : base("AddCommFile")
+		public AddHWProcessor() : base("AddHWFile")
 		{
 
 		}
@@ -28,21 +27,20 @@ namespace PSU_Mobile_Server.Controllers
 				var paramInfo = JsonSerializer.DeserializeAsync<FileProcessorInfo>(inf).Result;
 
 
+
 				//contentInfo => id's ? 
 				//Guid userID = new Guid(contentInfo);//
 				//Guid groupID = new Guid(contentInfo);//
 				//Guid lessonID = new Guid(contentInfo);//
 
-
 				string newPath;
-				var isFileInfoCorrect = Auth.Instance.Value.TryGetFilePath(paramInfo.userID, paramInfo.groupID, paramInfo.lessonID, out newPath);
-
+				var isFileInfoCorrect = Auth.Instance.Value.TryGetHWFilePath(paramInfo.userID, paramInfo.groupID, paramInfo.lessonID, out newPath);
 
 				if (isFileInfoCorrect)
 				{
-					Directory.CreateDirectory($".//server/{newPath}/common/");//
+					Directory.CreateDirectory($".//server/{newPath}/");//
 					var fileName = paramInfo.filename;
-					using var writeStream = File.OpenWrite($".//server/{newPath}/common/{fileName}");
+					using var writeStream = File.OpenWrite($".//server/{newPath}/{fileName}");
 					requestContent.CopyTo(writeStream);
 				}
 
@@ -57,13 +55,6 @@ namespace PSU_Mobile_Server.Controllers
 			}
 		}
 	}
-
-
-
-
-
-
-
 
 
 

@@ -5,7 +5,7 @@ namespace Common
 	public class Request
 	{
 		[JsonPropertyName("User")]
-		public UserInfo UserInfo { get; set; }
+		public User/*Info*/ UserInfo { get; set; }
 
 		[JsonPropertyName("ContentInfo")]
 		public byte[] ContentInfo { get; set; }

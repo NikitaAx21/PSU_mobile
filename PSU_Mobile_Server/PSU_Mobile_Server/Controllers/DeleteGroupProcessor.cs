@@ -7,34 +7,30 @@ using Common;
 
 namespace PSU_Mobile_Server.Controllers
 {
-	internal class DeleteGroupProcessor : BaseApiController
-	{
-		public DeleteGroupProcessor() : base("DelGroup")
+		internal class DeleteGroupProcessor : BaseApiController
 		{
-
-		}
-
-		public override (HttpStatusCode, Stream) ProcessRequest(byte[] contentInfo, Stream requestContent)
-		{
-			try
+			public DeleteGroupProcessor() : base("DelGroup")
 			{
-				var groupID = JsonSerializer.DeserializeAsync<Group>(requestContent).Result.ID;// ID !!
-				var isGroupExisted = Auth.Instance.Value.TryDeleteGroup(groupID);
 
-				var statusCode = isGroupExisted ? HttpStatusCode.Created/*?*/ : HttpStatusCode.InternalServerError;
-				return (statusCode, Stream.Null);// ответ ??
-			}
-			catch (Exception)
-			{
-				return (HttpStatusCode.InternalServerError, Stream.Null);
 			}
 
-			//return base.ProcessRequest(contentInfo, requestContent);
+			public override (HttpStatusCode, Stream) ProcessRequest(byte[] contentInfo, Stream requestContent)
+			{
+				try
+				{
+					var groupID = JsonSerializer.DeserializeAsync<Group>(requestContent).Result.ID;
+
+					var isGroupDeleted = Auth.Instance.Value.TryDeleteGroup(groupID);
+
+					var statusCode = isGroupDeleted ? HttpStatusCode.Created/*?*/ : HttpStatusCode.InternalServerError;
+					return (statusCode, Stream.Null);//
+				}
+				catch (Exception)
+				{
+					return (HttpStatusCode.InternalServerError, Stream.Null);
+				}
+			}
 		}
-	}
-
-
-
 
 
 

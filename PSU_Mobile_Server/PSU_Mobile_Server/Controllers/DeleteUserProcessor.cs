@@ -17,12 +17,14 @@ namespace PSU_Mobile_Server.Controllers
 		{
 			try
 			{
-				var userID = JsonSerializer.DeserializeAsync<UserInfo>(requestContent).Result;// ID !!
-				//getBD
+				var userID = JsonSerializer.DeserializeAsync<User>(requestContent).Result.ID;// ID !!
 
-				var isUserExisted = Auth.Instance.Value.TryDeleteUser(userID);
+				var isUserdeleted = Auth.Instance.Value.TryDeleteUser(userID);
 
-				var statusCode = isUserExisted ? HttpStatusCode.Created/*?*/ : HttpStatusCode.InternalServerError;
+
+
+
+				var statusCode = isUserdeleted ? HttpStatusCode.Created/*?*/ : HttpStatusCode.InternalServerError;
 				return (statusCode, Stream.Null);// ответ ??
 			}
 			catch (Exception)

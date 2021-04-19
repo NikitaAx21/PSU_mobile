@@ -7,9 +7,9 @@ using Common;
 
 namespace PSU_Mobile_Server.Controllers
 {
-	internal class AddGroupProcessor : BaseApiController
+	internal class AddLessonProcessor : BaseApiController
 	{
-		public AddGroupProcessor() : base("AddGroup")
+		public AddLessonProcessor() : base("AddLesson")
 		{
 
 		}
@@ -18,10 +18,12 @@ namespace PSU_Mobile_Server.Controllers
 		{
 			try
 			{
-				var groupInfo = JsonSerializer.DeserializeAsync<Group>(requestContent).Result;
-				var isGroupCreated = Auth.Instance.Value.TryAddGroup(groupInfo);
+				Guid currentGroup = new Guid(contentInfo);// !!! группа в которую добавляем
 
-				var statusCode = isGroupCreated ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
+				var lessonInfo = JsonSerializer.DeserializeAsync<Lesson>(requestContent).Result;
+				var isLessonCreated = Auth.Instance.Value.TryAddLesson(currentGroup,lessonInfo);
+
+				var statusCode = isLessonCreated ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
 				return (statusCode, Stream.Null);
 			}
 			catch (Exception)
@@ -32,4 +34,7 @@ namespace PSU_Mobile_Server.Controllers
 			//return base.ProcessRequest(contentInfo, requestContent);
 		}
 	}
+
+
+
 }

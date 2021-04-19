@@ -33,13 +33,13 @@ namespace PSU_Mobile_Client
 
 		private static void Work(HttpClient client, Uri baseAddress)
 		{
-			var newUserInfo = new UserInfo
+			var newUserInfo = new User//Info
 			{
 				UserName = $"User_{new Random().Next()}",
 				PasswordHash = AuthHelper.HashPassword("SomePass"),
 			};
 
-			var userInfo = new UserInfo
+			var userInfo = new User//Info
 			{
 				PasswordHash = AuthHelper.HashPassword(CommonConstants.SuperPass),
 				UserName = CommonConstants.SuperUser
