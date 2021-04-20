@@ -48,7 +48,7 @@ namespace Common
 
 
 		[JsonPropertyName("ruledGroups")]// ??
-		public List<Guid/*string*/> ruledGroups { get; set; }
+		public List<Guid> ruledGroups { get; set; }
 
 	}
 }

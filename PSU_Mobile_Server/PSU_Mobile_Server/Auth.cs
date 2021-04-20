@@ -115,8 +115,12 @@ namespace PSU_Mobile_Server
 					PasswordHash = newUser.PasswordHash,
 
 					Name = newUser.Name,
-					Surname = newUser.Surname
+					Surname = newUser.Surname,
 
+					// Надо ли
+					PermittedCommands = newUser.PermittedCommands,//??
+
+					ruledGroups = newUser.ruledGroups//??
 				});
 
 				return true;
@@ -143,14 +147,11 @@ namespace PSU_Mobile_Server
 			}
 		}
 
-		public bool TryGetUser(Guid ID,out User user)//
+		public bool TryGetUser(Guid ID,out User user)
 		{
 			lock (Lock)
 			{
 				user = null;
-
-				if (BD.Users.Select(u => u.ID).Contains(ID))
-					return false;
 
 				var userForDeleting = BD.Users.FirstOrDefault(u => u.ID == ID);
 				if (userForDeleting == null)
@@ -165,9 +166,6 @@ namespace PSU_Mobile_Server
 		{
 			lock (Lock)
 			{
-				if (BD.Users.Select(u => u.ID).Contains(ID))//повторяет FirstOrDefault
-					return false;
-
 				var userForDeleting = BD.Users.FirstOrDefault(u => u.ID == ID);
 				if (userForDeleting == null)
 					return false;
@@ -187,7 +185,7 @@ namespace PSU_Mobile_Server
 					return false;
 
 
-				if (!BD.Groups.Select(u => u.ID).Contains(newGroup.ID))
+				if (BD.Groups.Select(u => u.ID).Contains(newGroup.ID))
 					return false;
 
 
@@ -216,7 +214,7 @@ namespace PSU_Mobile_Server
 					return false;
 				
 				groupForUpd.GroupName = group.GroupName;
-				groupForUpd.Lessons = group.Lessons;
+				groupForUpd.Lessons = group.Lessons;//??
 				groupForUpd.UserLogins = group.UserLogins;
 				groupForUpd.CommonFilesLinks = group.CommonFilesLinks;
 
@@ -230,14 +228,11 @@ namespace PSU_Mobile_Server
 			{
 				group = new Group();
 
-				if (!BD.Groups.Select(u => u.ID).Contains(ID))
+				var newgroup = BD.Groups.FirstOrDefault(u => u.ID == ID);
+				if (newgroup == null)
 					return false;
 
-				var groupForDeleting = BD.Groups.FirstOrDefault(u => u.ID == ID);
-				if (groupForDeleting == null)
-					return false;
-
-				group = groupForDeleting;
+				group = newgroup;
 				return true;
 			}
 		}
@@ -246,9 +241,6 @@ namespace PSU_Mobile_Server
 		{
 			lock (Lock)
 			{
-				if (!BD.Groups.Select(u => u.ID).Contains(ID))
-					return false;
-
 				var userForDeleting = BD.Groups.FirstOrDefault(u => u.ID == ID);
 				if (userForDeleting == null)
 					return false;
@@ -271,7 +263,7 @@ namespace PSU_Mobile_Server
 				if (groupForLesson == null)
 					return false;
 
-				if (groupForLesson.Lessons.Select(u => u.ID).Contains(newLesson.ID))
+				if (groupForLesson.Lessons.Select(u => u.TopicName/**/).Contains(newLesson.TopicName))
 					return false;
 
 
@@ -293,18 +285,11 @@ namespace PSU_Mobile_Server
 		{
 			lock (Lock)
 			{
-				if (!BD.Groups.Select(u => u.ID).Contains(currentGroup))
-					return false;
-
 				var groupForLesson = BD.Groups.FirstOrDefault(u => u.ID == currentGroup);
 
 				if (groupForLesson == null)
 					return false;
 
-
-
-				if (!groupForLesson.Lessons.Select(u => u.ID).Contains(newLesson.ID))
-					return false;
 
 				var lessonForUpd = groupForLesson.Lessons.FirstOrDefault(u => u.ID == currentGroup);
 
@@ -314,7 +299,7 @@ namespace PSU_Mobile_Server
 				lessonForUpd.TopicName = newLesson.TopicName;
 				lessonForUpd.TestFlag = newLesson.TestFlag;
 				lessonForUpd.Date = newLesson.Date;
-				lessonForUpd.LessonFilesLinks = newLesson.LessonFilesLinks;
+				lessonForUpd.LessonFilesLinks = newLesson.LessonFilesLinks;//??
 				lessonForUpd.HomeWorkFilesLinks = newLesson.HomeWorkFilesLinks;//??
 				lessonForUpd.Presence = newLesson.Presence;
 
@@ -328,18 +313,11 @@ namespace PSU_Mobile_Server
 			{
 				newLesson = new Lesson();
 
-				if (!BD.Groups.Select(u => u.ID).Contains(gID))
-					return false;
-
 				var groupForLesson = BD.Groups.FirstOrDefault(u => u.ID == gID);
 
 				if (groupForLesson == null)
 					return false;
 
-
-
-				if (!groupForLesson.Lessons.Select(u => u.ID).Contains(lID))
-					return false;
 
 				var lessonToGet = groupForLesson.Lessons.FirstOrDefault(u => u.ID == lID);
 
@@ -356,24 +334,16 @@ namespace PSU_Mobile_Server
 		{
 			lock (Lock)
 			{
-				if (!BD.Groups.Select(u => u.ID).Contains(currentGroup))
-					return false;
-
 				var groupForLesson = BD.Groups.FirstOrDefault(u => u.ID == currentGroup);
 
 				if (groupForLesson == null)
 					return false;
 
 
-
-				if (!groupForLesson.Lessons.Select(u => u.ID).Contains(ID))
-					return false;
-
 				var lessonForDeleting = groupForLesson.Lessons.FirstOrDefault(u => u.ID == ID);
 
 				if (lessonForDeleting == null)
 					return false;
-
 
 
 				groupForLesson.Lessons.Remove(lessonForDeleting);
@@ -384,44 +354,59 @@ namespace PSU_Mobile_Server
 		//==============================================================
 
 
-		public bool TryGetFilePath(Guid userID, Guid groupID, Guid lessonID, out string newPath)//
+		public bool TryGetCommFilePath(FileProcessorInfo paramInfo, out string newPath)//
 		{
-			lock (Lock)
+			lock (Lock)//второй лок
 			{
 				newPath="";
 
 
 
-				var user = BD.Users.FirstOrDefault(u => u.ID == userID);
+				var user = BD.Users.FirstOrDefault(u => u.ID == paramInfo.userID);
 
 				if (user == null)
 					return false;
 
 
 
-				if (!user.ruledGroups.Contains(groupID))
+				if (!user.ruledGroups.Contains(paramInfo.groupID))
 					return false;
 
 
 
 
-				var group = BD.Groups.FirstOrDefault(u => u.ID == groupID);
+				var group = BD.Groups.FirstOrDefault(u => u.ID == paramInfo.groupID);
 
 				if (group == null)
 					return false;
 
-				newPath = group.GroupName;//ID?
+				newPath = group.GroupName+"/";//??
 
 
-				if (lessonID == Guid.Empty)//??
+				var lesson = group.Lessons.FirstOrDefault(u => u.ID == paramInfo.lessonID);
+
+				if (paramInfo.lessonID != Guid.Empty)//??
 				{
+					if (lesson != null)
+						newPath += lesson.TopicName + "/";
+				}
 
-					var lesson = group.Lessons.FirstOrDefault(u => u.ID == lessonID);
+				newPath += "/common/"+ paramInfo.filename;
 
-					if (lesson == null)
+
+				if (paramInfo.lessonID != Guid.Empty)//??
+				{
+					if (lesson.LessonFilesLinks.Contains(newPath))
 						return false;
 
-					newPath += lesson.TopicName;
+					lesson.LessonFilesLinks.Add(newPath);
+				}
+				else
+				{
+					if (group.CommonFilesLinks.Contains(newPath))
+						return false;
+
+					group.CommonFilesLinks.Add(newPath);
 				}
 
 				return true;
@@ -429,49 +414,166 @@ namespace PSU_Mobile_Server
 		}
 
 
-		public bool TryGetHWFilePath(Guid userID, Guid groupID, Guid lessonID, out string newPath)//
+		public bool TryGetHWFilePath(FileProcessorInfo paramInfo, out string newPath)//
 		{
-			lock (Lock)
+			lock (Lock)//второй лок
 			{
 				newPath = "";
 
-				if (!BD.Users.Select(u => u.ID).Contains(userID))
-					return false;
-
-				var user = BD.Users.FirstOrDefault(u => u.ID == userID);
+				var user = BD.Users.FirstOrDefault(u => u.ID == paramInfo.userID);
 
 				if (user == null)
 					return false;
 
 
-				if (!BD.Groups.Select(u => u.ID).Contains(groupID))
-					return false;
-
-				var group = BD.Groups.FirstOrDefault(u => u.ID == groupID);
+				var group = BD.Groups.FirstOrDefault(u => u.ID == paramInfo.groupID);
 
 				if (group == null)
 					return false;
 
 
-				if (!group.Lessons.Select(u => u.ID).Contains(lessonID))
-					return false;
-
-				var lesson = group.Lessons.FirstOrDefault(u => u.ID == lessonID);
+				var lesson = group.Lessons.FirstOrDefault(u => u.ID == paramInfo.lessonID);
 
 				if (lesson == null)
 					return false;
 
 
 
-				newPath += group.GroupName + "/"+lesson.TopicName +"/"+ user.UserName;//??
-				
+				newPath += group.GroupName + "/"+lesson.TopicName +"/"+ user.UserName + "/common/";
+
+				newPath += paramInfo.filename;
+
+
+				if (lesson.LessonFilesLinks.Contains(newPath))
+					return false;
+
+
+				/*перенос в процессор?	добавление в группы и занятия*/
+				lesson.LessonFilesLinks.Add(newPath);
 
 				return true;
 			}
 		}
 
+		
 
 
+
+		///<summary>Проверка "логического" наличия файла</summary>
+		public bool FileExistanceCheck(FileProcessorInfo paramInfo/*, out Stream fileStream*/)//
+		{
+			lock (Lock)//
+			{
+				//paramInfo.fileName = путь
+
+
+				var user = BD.Users.FirstOrDefault(u => u.ID == paramInfo.userID);
+
+				if (user == null)
+					return false;
+
+
+				var group = BD.Groups.FirstOrDefault(u => u.ID == paramInfo.groupID);
+
+				if (group == null)
+					return false;
+
+
+				var lesson = group.Lessons.FirstOrDefault(u => u.ID == paramInfo.lessonID);
+
+				if (lesson == null)
+					return false;
+
+
+				if (paramInfo.filename.Contains("/common/") && paramInfo.filename.Contains(group.GroupName))//GroupName
+				{
+					
+					if (group.CommonFilesLinks.Contains(paramInfo.filename))
+						return false;
+					
+					//fileStream чёт присвоить??
+
+					return true;
+				}
+
+
+
+				if ((paramInfo.filename.Contains(user.UserName) || paramInfo.filename.Contains("/common/"))&& paramInfo.filename.Contains(lesson.TopicName) && paramInfo.filename.Contains(group.GroupName))//
+				{
+
+					if (lesson.LessonFilesLinks.Contains(paramInfo.filename))
+						return false;
+
+
+					//fileStream чёт присвоить??
+
+					return true;
+				}
+
+				return false;
+			}
+
+		}
+
+
+
+
+
+
+
+
+
+		//public bool TryAddCommFile(FileProcessorInfo paramInfo, out string newPath)//
+		//{
+		//	lock (Lock)
+		//	{
+		//		if (!TryGetFilePath(paramInfo, out var filePath))
+		//			return false;
+
+		//		newPath = filePath;
+
+
+		//		var user = BD.Users.FirstOrDefault(u => u.ID == paramInfo.userID);
+
+		//		if (user == null)
+		//			return false;
+
+
+
+		//		if (!user.ruledGroups.Contains(paramInfo.groupID))
+		//			return false;
+
+
+		//		var group = BD.Groups.FirstOrDefault(u => u.ID == paramInfo.groupID);
+
+		//		if (group == null)
+		//			return false;
+
+		//		var lesson = group.Lessons.FirstOrDefault(u => u.ID == paramInfo.lessonID);
+
+
+		//		if (lessonID != Guid.Empty)//??
+		//		{
+		//			if (lesson.LessonFilesLinks.Contains(newPath))
+		//				return false;
+
+		//			lesson.LessonFilesLinks.add(newPath);
+		//		}
+		//		else
+		//		{
+		//			if (group.CommonFilesLinks.Contains(newPath))
+		//				return false;
+
+		//			group.CommonFilesLinks.add(newPath);
+		//		}
+
+		//		return true;
+		//	}
+
+
+
+
+		//}
 
 
 

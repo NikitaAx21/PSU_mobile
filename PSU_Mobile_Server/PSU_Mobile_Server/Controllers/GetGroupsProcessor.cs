@@ -21,8 +21,7 @@ namespace PSU_Mobile_Server.Controllers
 			{
 				var groupInfo = JsonSerializer.DeserializeAsync<Group>(requestContent).Result.ID;
 
-				var tempgroup = new Group();
-				var isGroupObtained = Auth.Instance.Value.TryGetGroup(groupInfo, out tempgroup);
+				var isGroupObtained = Auth.Instance.Value.TryGetGroup(groupInfo, out var tempgroup);
 				var statusCode = isGroupObtained ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
 
 

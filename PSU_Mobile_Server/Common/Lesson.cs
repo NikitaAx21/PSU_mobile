@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 
-namespace PSU_Mobile_Server
+namespace Common
 {
 	public class Lesson
     {
@@ -37,7 +37,7 @@ namespace PSU_Mobile_Server
 
 
 		[JsonPropertyName("Presence")]
-		public Dictionary<Guid, int?> Presence { get; set; }// определение присутствия и оценок
+		public Dictionary<Guid/*пользователи*/, int?> Presence { get; set; }// определение присутствия и оценок
 
 	}
 }

@@ -23,8 +23,7 @@ namespace PSU_Mobile_Server.Controllers
 
 				var lessonInfo = JsonSerializer.DeserializeAsync<Lesson>(requestContent).Result.ID;
 
-				var templesson = new Lesson();
-				var isLessonObtained = Auth.Instance.Value.TryGetLesson(currentGroup, lessonInfo, out templesson);
+				var isLessonObtained = Auth.Instance.Value.TryGetLesson(currentGroup, lessonInfo, out var templesson);
 				var statusCode = isLessonObtained ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
 
 

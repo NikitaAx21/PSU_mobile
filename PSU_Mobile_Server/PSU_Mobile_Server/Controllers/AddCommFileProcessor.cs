@@ -19,27 +19,17 @@ namespace PSU_Mobile_Server.Controllers
 		{
 			try
 			{
-
-
-
 				var paramInfo = JsonSerializer.Deserialize<FileProcessorInfo>(contentInfo);
 
-
-				//contentInfo => id's ? 
-				//Guid userID = new Guid(contentInfo);//
-				//Guid groupID = new Guid(contentInfo);//
-				//Guid lessonID = new Guid(contentInfo);//
-
-
 				string newPath;
-				var isFileInfoCorrect = Auth.Instance.Value.TryGetFilePath(paramInfo.userID, paramInfo.groupID, paramInfo.lessonID, out newPath);
+				var isFileInfoCorrect = Auth.Instance.Value.TryGetCommFilePath(paramInfo, out newPath);
 
 
 				if (isFileInfoCorrect)
 				{
-					Directory.CreateDirectory($".//server/{newPath}/common/");//
-					var fileName = paramInfo.filename;
-					using var writeStream = File.OpenWrite($".//server/{newPath}/common/{fileName}");
+					Directory.CreateDirectory($".//server/{newPath}");//
+					//var fileName = paramInfo.filename;
+					using var writeStream = File.OpenWrite($".//server/{newPath}");
 					requestContent.CopyTo(writeStream);
 				}
 

@@ -21,9 +21,6 @@ namespace PSU_Mobile_Server.Controllers
 
 				var isUserdeleted = Auth.Instance.Value.TryDeleteUser(userID);
 
-
-
-
 				var statusCode = isUserdeleted ? HttpStatusCode.Created/*?*/ : HttpStatusCode.InternalServerError;
 				return (statusCode, Stream.Null);// ответ ??
 			}

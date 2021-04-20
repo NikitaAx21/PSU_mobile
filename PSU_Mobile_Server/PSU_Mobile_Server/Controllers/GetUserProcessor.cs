@@ -21,7 +21,6 @@ namespace PSU_Mobile_Server.Controllers
 			{
 				var userInfo = JsonSerializer.DeserializeAsync<User>(requestContent).Result.ID;
 
-				//var tempuser=new User();
 				var isUserObtained = Auth.Instance.Value.TryGetUser(userInfo, out var tempuser);
 				var statusCode = isUserObtained ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
 
