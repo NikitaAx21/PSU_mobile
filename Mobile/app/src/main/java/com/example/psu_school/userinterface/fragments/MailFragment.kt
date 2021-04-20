@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.fragment.app.Fragment
 import com.example.psu_school.R
 import kotlinx.android.synthetic.main.fragment_mail.*
 import utilits.getFilenameFromUri
@@ -11,7 +12,7 @@ import utilits.show_toast
 
 
 @Suppress("DEPRECATION")
-class MailFragment : BaseFragment(R.layout.fragment_mail) {
+class MailFragment : Fragment(R.layout.fragment_mail) {
 
     private var mContext: Context? = null
     var mUri: Uri? = null

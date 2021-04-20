@@ -9,7 +9,10 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
+import com.example.psu_mobile.UserInfo
+import com.example.psu_school.MainActivity
 import com.example.psu_school.R
 import com.example.psu_school.utilits.app_text_watcher
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -18,6 +21,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 //показывает сообщение во фрагментах
 fun Fragment.show_toast(message: String){
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+fun AppCompatActivity.show_toast(message: String){
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }
 
 fun Fragment.button_visible(myEditText: EditText, myButton: FloatingActionButton){
@@ -37,13 +44,28 @@ fun AppCompatActivity.replace_activity(activity: AppCompatActivity){
     startActivity(register)
 }
 
-fun AppCompatActivity.replace_fragment(fragment: Fragment){
-    supportFragmentManager.beginTransaction()
-        .addToBackStack(null)
-        .replace(
-            R.id.data_container,
-            fragment
-        ).commit()
+fun AppCompatActivity.replace_activity_with_data(activity: AppCompatActivity){
+    val register = Intent(this, activity::class.java)
+    startActivity(register)
+}
+
+
+fun AppCompatActivity.replace_fragment(fragment: Fragment, addStack: Boolean = true){
+    if(addStack){
+        supportFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(
+                R.id.data_container,
+                fragment
+            ).commit()
+    }
+    else{
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.data_container,
+                fragment
+            ).commit()
+    }
 }
 
 fun Fragment.replace_fragment(fragment: Fragment){
