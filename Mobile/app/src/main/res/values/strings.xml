@@ -31,4 +31,6 @@
     <string name="mail_file_err">Возникли проблемы с доступом к файлу</string>
     <string name="add_file_text">Выберите файл</string>
     <string name="sett_save_change_text">Настройки изменены</string>
+    <string name="login_or_pass_error">Неверный логин или пароль</string>
+    <string name="photo_data_text">Данные:</string>
 </resources>

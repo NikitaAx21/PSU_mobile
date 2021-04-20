@@ -8,18 +8,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.psu_mobile.UserInfo
 import com.example.psu_school.MapsActivity
-import com.example.psu_school.userinterface.fragments.*
 import com.example.psu_school.R
+import com.example.psu_school.userinterface.fragments.*
 import com.google.zxing.integration.android.IntentIntegrator
 import com.mikepenz.materialdrawer.*
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
+import kotlinx.android.synthetic.main.fragment_photo.*
 import utilits.replace_activity
 import utilits.replace_fragment
 
-class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar){
+class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar, val mUserInfo: UserInfo){
     private lateinit var mDrawer: Drawer
     private lateinit var mHeader: AccountHeader
     private lateinit var mDrawerLayout: DrawerLayout
@@ -102,10 +104,10 @@ class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar){
                     drawerItem: IDrawerItem<*>
                 ): Boolean {
                     when (position) {
-                        1->{
+                        1 -> {
                             mainActivity.replace_fragment(NewsFragment())
                         }
-                        2->{
+                        2 -> {
                             mainActivity.replace_fragment(TimeTableFragment())
                         }
                         3 -> {
@@ -115,8 +117,7 @@ class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar){
                             mainActivity.replace_fragment(MailFragment())
                         }
                         5 -> {
-                            val scanner = IntentIntegrator(mainActivity)
-                            scanner.initiateScan()
+                            mainActivity.replace_fragment(PhotoFragment())
                         }
                         6 -> {
                             mainActivity.replace_activity(MapsActivity())
@@ -135,24 +136,8 @@ class myDrawer(val mainActivity: AppCompatActivity, val toolbar: Toolbar){
         mHeader = AccountHeaderBuilder().withActivity(mainActivity)
             .withHeaderBackground(R.drawable.header)
             .addProfiles(
-                ProfileDrawerItem().withName("Vanya Ivanov")
-                    .withEmail("Group1")
+                ProfileDrawerItem().withName(mUserInfo.Name + " " + mUserInfo.Surname)
+                    .withEmail(mUserInfo.Group)
             ).build()
     }
-
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-            if (result != null) {
-                if (result.getContents() == null) {
-                    Toast.makeText(mainActivity, "Cancelled", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(mainActivity, "Scanned:" + result.contents, Toast.LENGTH_LONG).show()
-                }
-            } else {
-                //super.onActivityResult(requestCode, resultCode, data)
-            }
-        }
-    }
-
 }

@@ -1,11 +1,13 @@
 package com.example.psu_school.userinterface.fragments
 
 import android.os.StrictMode
+import androidx.core.app.ActivityCompat.recreate
 import androidx.fragment.app.Fragment
 import com.example.psu_mobile.AuthHelper
 import com.example.psu_mobile.Request
 import com.example.psu_mobile.RequestProcessor
 import com.example.psu_mobile.UserInfo
+import com.example.psu_school.MainActivity
 import com.example.psu_school.R
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -31,10 +33,12 @@ class EnterFragment : Fragment(R.layout.fragment_enter) {
             show_toast(getString(R.string.register_toast_pass))
         }
         else{
-            //здесь надо проводить авторизацию со всеми вытекающими
-              //дальше этого места приложение не пойдет
-            //sendPostRequestAsync()
-            replace_fragment(MailFragment())
+            if(register_input_login.text.toString().equals((activity as MainActivity).mUserInfo.Login)
+                && register_input_pass.text.toString().equals((activity as MainActivity).mUserInfo.PassHash)){
+                (activity as MainActivity).mmyDrawer.createDrawer()
+                replace_fragment(NewsFragment())
+            }
+            else  show_toast(getString(R.string.login_or_pass_error))
         }
     }
 

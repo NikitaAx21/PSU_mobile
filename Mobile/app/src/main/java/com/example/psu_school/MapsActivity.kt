@@ -1,6 +1,7 @@
 package com.example.psu_school
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -19,12 +20,14 @@ import com.example.psu_school.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_maps.*
+import utilits.show_toast
 
 public class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var map: GoogleMap? = null
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var lastKnownLocation: Location? = null
+    lateinit var mUserInfo : UserInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,9 +62,11 @@ public class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        mUserInfo = UserInfo()
         getDeviceLocation()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun getDeviceLocation(){
         try {
                 val locationResult = fusedLocationProviderClient?.lastLocation
@@ -72,9 +77,12 @@ public class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             map?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
                             map?.addMarker(MarkerOptions().position(LatLng(it.latitude,it.longitude)).title("Вы здесь!"))
                             map?.setOnMapClickListener(GoogleMap.OnMapClickListener {
-                                coordinates_text_name.setText("Широта: " + lastKnownLocation?.latitude.toString()
-                                        + " Долгота: " + lastKnownLocation?.longitude.toString())
+                               mUserInfo.Latitude = lastKnownLocation!!.latitude
+                               mUserInfo.Longitude = lastKnownLocation!!.longitude
+                                coordinates_text_name.setText("Широта: " + mUserInfo.Latitude.toString()
+                                        + " Долгота: " + mUserInfo.Longitude.toString())
                             })
+                            send_coordinates_button.setOnClickListener { send_data_to_server() }
                         }
                     } else {
                         map?.uiSettings?.isMyLocationButtonEnabled = false
@@ -83,5 +91,9 @@ public class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         } catch (e: SecurityException) {
             //Log.e("Exception: %s", e.message, e)
         }
+    }
+
+    private fun send_data_to_server() {
+        show_toast("Отправка завершена")
     }
 }

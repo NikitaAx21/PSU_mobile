@@ -83,7 +83,7 @@
         <item name="android:hint">""</item>
         <item name="android:backgroundTint">@color/colorPrimary</item>
         <item name="android:autofillHints">""</item>
-        <item name="android:inputType">phone</item>
+        <item name="android:inputType">textMultiLine</item>
     </style>
 
     <style name="mail_edit_style">
