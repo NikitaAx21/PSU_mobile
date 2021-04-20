@@ -6,9 +6,9 @@ using Common;
 
 namespace PSU_Mobile_Server.Controllers
 {
-	internal class CreateUserProcessor : BaseApiController
+ 	internal class UpdUserProcessor : BaseApiController
 	{
-		public CreateUserProcessor() : base("CreateUser")
+		public UpdUserProcessor() : base("UpdUser")
 		{
 
 		}
@@ -18,8 +18,10 @@ namespace PSU_Mobile_Server.Controllers
 			try
 			{
 				var userInfo = JsonSerializer.DeserializeAsync<User>(requestContent).Result;
-				var isUserCreated = Auth.Instance.Value.TryAddUser(userInfo);
-				var statusCode = isUserCreated ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
+				var isUserUpdated = Auth.Instance.Value.TryUpdUser(userInfo);
+
+
+				var statusCode = isUserUpdated ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
 				return (statusCode, Stream.Null);
 			}
 			catch (Exception)
@@ -28,4 +30,7 @@ namespace PSU_Mobile_Server.Controllers
 			}
 		}
 	}
+
+
+
 }

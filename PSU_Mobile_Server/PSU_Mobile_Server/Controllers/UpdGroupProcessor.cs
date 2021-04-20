@@ -7,9 +7,9 @@ using Common;
 
 namespace PSU_Mobile_Server.Controllers
 {
-	internal class AddGroupProcessor : BaseApiController
+	internal class UpdGroupProcessor : BaseApiController
 	{
-		public AddGroupProcessor() : base("AddGroup")
+		public UpdGroupProcessor() : base("UpdGroup")
 		{
 
 		}
@@ -19,17 +19,20 @@ namespace PSU_Mobile_Server.Controllers
 			try
 			{
 				var groupInfo = JsonSerializer.DeserializeAsync<Group>(requestContent).Result;
-				var isGroupCreated = Auth.Instance.Value.TryAddGroup(groupInfo);
+				var isGroupUpdated = Auth.Instance.Value.TryUpdGroup(groupInfo);
 
-				var statusCode = isGroupCreated ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
+
+				var statusCode = isGroupUpdated ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
 				return (statusCode, Stream.Null);
 			}
 			catch (Exception)
 			{
 				return (HttpStatusCode.InternalServerError, Stream.Null);
 			}
-
-			//return base.ProcessRequest(contentInfo, requestContent);
 		}
 	}
+
+
+
+
 }

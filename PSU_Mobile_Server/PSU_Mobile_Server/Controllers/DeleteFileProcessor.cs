@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using Common;
 
-namespace PSU_Mobile_Server.Controllers
+namespace PSU_Mobile_Server.Controllers//===========----------------
 {
-	internal class AddGroupProcessor : BaseApiController
+	internal class DeleteFileProcessor : BaseApiController
 	{
-		public AddGroupProcessor() : base("AddGroup")
+		public DeleteFileProcessor() : base("DelFile")
 		{
 
 		}
@@ -18,10 +18,10 @@ namespace PSU_Mobile_Server.Controllers
 		{
 			try
 			{
-				var groupInfo = JsonSerializer.DeserializeAsync<Group>(requestContent).Result;
-				var isGroupCreated = Auth.Instance.Value.TryAddGroup(groupInfo);
+				//var groupInfo = JsonSerializer.DeserializeAsync<Group>(requestContent).Result;
+				//var isGroupCreated = Auth.Instance.Value.TryAddGroup(groupInfo);
 
-				var statusCode = isGroupCreated ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
+				var statusCode = /*isGroupCreated ? HttpStatusCode.Created :*/ HttpStatusCode.InternalServerError;
 				return (statusCode, Stream.Null);
 			}
 			catch (Exception)
