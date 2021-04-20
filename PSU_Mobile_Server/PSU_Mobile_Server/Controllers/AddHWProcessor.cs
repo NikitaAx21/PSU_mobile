@@ -26,7 +26,7 @@ namespace PSU_Mobile_Server.Controllers
 				if (isFileInfoCorrect)
 				{
 					Directory.CreateDirectory($".//server/{newPath}");//
-					var fileName = paramInfo.filename;
+
 					using var writeStream = File.OpenWrite($".//server/{newPath}");
 					requestContent.CopyTo(writeStream);
 				}

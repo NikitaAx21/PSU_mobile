@@ -356,7 +356,7 @@ namespace PSU_Mobile_Server
 
 		public bool TryGetCommFilePath(FileProcessorInfo paramInfo, out string newPath)//
 		{
-			lock (Lock)//второй лок
+			lock (Lock)
 			{
 				newPath="";
 
