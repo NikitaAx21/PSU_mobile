@@ -22,6 +22,14 @@ namespace Common
 		public User()
 		{
 			ID = Guid.NewGuid();
+
+			PermittedCommands = new List<string>();
+
+			PermittedCommands.Add("GetBD");
+
+			PermittedCommands.Add("AddHWFile");
+
+			PermittedCommands.Add("GetFile");
 		}
 
 		[JsonPropertyName("ID")]
@@ -42,10 +50,10 @@ namespace Common
 		[JsonPropertyName("PassHash")]
 		public string PasswordHash { get; set; }
 
+
+
 		[JsonPropertyName("Permissions")]
 		public List<string> PermittedCommands { get; set; }
-
-
 
 		[JsonPropertyName("ruledGroups")]// ??
 		public List<Guid> ruledGroups { get; set; }

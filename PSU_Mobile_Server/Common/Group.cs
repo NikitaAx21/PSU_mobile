@@ -6,11 +6,17 @@ using System;
 
 namespace Common
 {
-	public class Group
+	public class Group//Добавить преподавателя?
 	{
 		public Group()
 		{
 			ID = Guid.NewGuid();
+
+			Lessons = new List<Lesson>();
+
+			UserLogins = new List<string>();
+
+			CommonFilesLinks = new List<string>();
 		}
 
 

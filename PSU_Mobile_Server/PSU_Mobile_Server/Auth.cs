@@ -47,16 +47,17 @@ namespace PSU_Mobile_Server
 				BD = new DataBase
 				{
 					Users = new List<User>(),
-					Groups =new List<Group>(),
-					Files = new List<string>()
+					Groups =new List<Group>()//,
+					//Files = new List<string>()
 				};
 			}
 
+			List<string> tmpList = ApiControllersInitializer.Instance.RequestToControllersDictionary.Keys.ToList();
 			var superUser = new User
 			{
 				PasswordHash = AuthHelper.HashPassword(CommonConstants.SuperPass),
 				UserName = CommonConstants.SuperUser,
-				PermittedCommands = ApiControllersInitializer.Instance.RequestToControllersDictionary.Keys.ToList()
+				PermittedCommands = tmpList// ApiControllersInitializer.Instance.RequestToControllersDictionary.Keys.ToList()
 			};
 			BD.Users.Add(superUser);
 			Task.Run(Save);
@@ -98,7 +99,132 @@ namespace PSU_Mobile_Server
 		}
 
 
-		//==============================================================
+//==============================================================
+
+		public bool TryGetBD(string UserName, out DataBase tmpDB)//
+		{
+			lock (Lock)
+			{
+				Console.WriteLine("TryGetBD");
+				tmpDB = new DataBase();
+
+
+				var thisUser = BD.Users.FirstOrDefault(u => u.UserName == UserName);
+				if (thisUser == null)
+					return false;
+
+				Console.WriteLine("know thisUser");
+
+
+				List<Group> tmpGroupsList = new List<Group>();
+				List<User> tmpUserList = new List<User>();
+				tmpUserList.Add(thisUser);
+				Console.WriteLine(tmpUserList.Count);
+
+
+				Console.WriteLine($"  thisUser.ruledGroups  {thisUser.ruledGroups.Count}");
+				foreach (Guid groupID in thisUser.ruledGroups)
+				{
+					var newgroup = BD.Groups.FirstOrDefault(u => u.ID == groupID);
+					if (newgroup == null)
+						continue;//return false; ??
+
+					Console.WriteLine($"newgroup  {newgroup.GroupName}");
+
+					tmpGroupsList.Add(newgroup);
+				}
+
+				//=============================
+
+				if (thisUser.ruledGroups.Count == 0)// если не руководит, то участвует
+				{
+					foreach (Group group in BD.Groups)
+					{
+						var foundname = group.UserLogins.FirstOrDefault(u => u == UserName);
+						if ((foundname == null) || (foundname != UserName))
+							continue;
+
+
+						Console.WriteLine($"group  {group.GroupName}");
+
+						tmpGroupsList.Add(group);
+					}
+				}
+
+				tmpDB.Groups = tmpGroupsList;
+
+				Console.WriteLine("Groups done");
+
+				//=============================
+
+				foreach (Group group in tmpDB.Groups)// добавлять только нужную инфу о юзерах??
+				{
+					foreach (string userlogin in group.UserLogins)
+					{
+
+						Console.WriteLine($"userlogin  {userlogin}");
+
+
+						var tmpuser = BD.Users.FirstOrDefault(u => u.UserName == userlogin);
+						if ((tmpuser == null))
+							continue;
+
+
+						// обнулять ли PasswordHash PermittedCommands ruledGroups
+						/*
+						 
+						 	var userInfo = new User//Info
+							{
+
+								ID=tmpuser.ID, // конструктор
+								UserName = tmpuser.UserName,
+								Name =tmpuser.Name,
+								Surname=tmpuser.Surname
+
+							};
+
+						 */
+
+
+
+						tmpUserList.Add(tmpuser);
+					}
+				}
+
+				tmpDB.Users = tmpUserList;
+
+				return true;
+			}
+		}
+
+
+//==============================================================
+
+		public bool TryGetFullBD(string UserName, out DataBase tmpDB)//
+		{
+			lock (Lock)
+			{
+				tmpDB = new DataBase();
+				var thisUser = BD.Users.FirstOrDefault(u => u.UserName == UserName);
+				if (thisUser == null)
+					return false;
+
+				/*
+				 
+					Доп проверка рута?
+				 
+				 */
+
+				tmpDB = new DataBase()
+				{
+					Users = BD.Users,
+					Groups = BD.Groups
+				};	
+				return true;
+			}
+		}
+
+//==============================================================
 		public bool TryAddUser(User newUser)
 		{
 			lock (Lock)
@@ -112,7 +238,7 @@ namespace PSU_Mobile_Server
 				BD.Users.Add(new User
 				{
 					UserName = newUser.UserName,
-					PasswordHash = newUser.PasswordHash,
+					PasswordHash = AuthHelper.HashPassword(newUser.PasswordHash),//newUser.PasswordHash,
 
 					Name = newUser.Name,
 					Surname = newUser.Surname,
@@ -127,6 +253,7 @@ namespace PSU_Mobile_Server
 			}
 		}
 
+
 		public bool TryUpdUser(User user)
 		{
 			lock (Lock)
@@ -137,15 +264,19 @@ namespace PSU_Mobile_Server
 				if (userForUpd == null)
 					return false;
 
+				userForUpd.PasswordHash = AuthHelper.HashPassword(user.PasswordHash);// хэш ли?
+
 				userForUpd.Name = user.Name;
 				userForUpd.Surname = user.Surname;
+
 				userForUpd.PermittedCommands = user.PermittedCommands;
 				userForUpd.ruledGroups = user.ruledGroups;
-				userForUpd.Name = user.Name;
 
 				return true;
 			}
 		}
+
+
 
 		public bool TryGetUser(Guid ID,out User user)
 		{
@@ -214,9 +345,9 @@ namespace PSU_Mobile_Server
 					return false;
 				
 				groupForUpd.GroupName = group.GroupName;
-				groupForUpd.Lessons = group.Lessons;//??
+				//groupForUpd.Lessons = group.Lessons;//??
 				groupForUpd.UserLogins = group.UserLogins;
-				groupForUpd.CommonFilesLinks = group.CommonFilesLinks;
+				//groupForUpd.CommonFilesLinks = group.CommonFilesLinks;
 
 				return true;
 			}
@@ -272,8 +403,8 @@ namespace PSU_Mobile_Server
 					TopicName = newLesson.TopicName,
 					TestFlag = newLesson.TestFlag,
 					Date = newLesson.Date,
-					LessonFilesLinks = newLesson.LessonFilesLinks,
-					HomeWorkFilesLinks = newLesson.HomeWorkFilesLinks,// ??
+					//LessonFilesLinks = newLesson.LessonFilesLinks,
+					//HomeWorkFilesLinks = newLesson.HomeWorkFilesLinks,// ??
 					Presence = newLesson.Presence
 				});
 
@@ -299,8 +430,8 @@ namespace PSU_Mobile_Server
 				lessonForUpd.TopicName = newLesson.TopicName;
 				lessonForUpd.TestFlag = newLesson.TestFlag;
 				lessonForUpd.Date = newLesson.Date;
-				lessonForUpd.LessonFilesLinks = newLesson.LessonFilesLinks;//??
-				lessonForUpd.HomeWorkFilesLinks = newLesson.HomeWorkFilesLinks;//??
+				//lessonForUpd.LessonFilesLinks = newLesson.LessonFilesLinks;//??
+				//lessonForUpd.HomeWorkFilesLinks = newLesson.HomeWorkFilesLinks;//??
 				lessonForUpd.Presence = newLesson.Presence;
 
 				return true;
@@ -612,7 +743,7 @@ namespace PSU_Mobile_Server
 		{
 			try
 			{
-				using var f = new FileStream(_filePath, FileMode.Create);
+				using var f = new FileStream(_filePath, FileMode.OpenOrCreate);
 				string buffer;
 				lock (Lock)
 				{

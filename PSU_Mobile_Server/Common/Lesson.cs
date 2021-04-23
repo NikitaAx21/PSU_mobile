@@ -11,6 +11,14 @@ namespace Common
 		public Lesson()
 		{
 			ID = Guid.NewGuid();
+
+			TestFlag = false;
+
+			LessonFilesLinks = new List<string>();
+
+			HomeWorkFilesLinks = new List<string>();
+
+			Presence = new Dictionary<Guid/*пользователи*/, int?>();
 		}
 
 

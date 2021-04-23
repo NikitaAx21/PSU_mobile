@@ -1,11 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using Common;//Temp
 
-namespace PSU_Mobile_Server
+namespace Common
 {
     public class DataBase
     {
+
+
+        public DataBase()
+        {
+            Users = new List<User>();
+
+            Groups = new List<Group>();
+        }
+
+
         [JsonPropertyName("Users")]
         public List<User> Users { get; set; }
 
@@ -14,7 +23,7 @@ namespace PSU_Mobile_Server
         public List<Group> Groups { get; set; }
 
 
-        [JsonPropertyName("Files")]
-        public List<string> Files { get; set; }// все файлы
+        //[JsonPropertyName("Files")]
+        //public List<string> Files { get; set; }// все файлы
     }
 }

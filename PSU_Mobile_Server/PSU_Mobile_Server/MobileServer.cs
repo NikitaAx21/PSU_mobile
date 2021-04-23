@@ -23,7 +23,7 @@ namespace PSU_Mobile_Server
 		{
 			_listener = new HttpListener();
 			_cancellationTokenSource = new CancellationTokenSource();
-			ShutdownProcessor.Initialize(_cancellationTokenSource);
+			//ShutdownProcessor.Initialize(_cancellationTokenSource);
 		}
 
 		public static Lazy<MobileServer> Instance { get; } = new Lazy<MobileServer>(new MobileServer());

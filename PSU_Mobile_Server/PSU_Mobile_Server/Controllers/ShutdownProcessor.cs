@@ -11,15 +11,15 @@ namespace PSU_Mobile_Server.Controllers
 
 		public ShutdownProcessor() : base("Shutdown") { }
 
-		public static void Initialize(CancellationTokenSource shutdownTokenSource)
-		{
-			_shutdownTokenSource = shutdownTokenSource;
-		}
+		//public static void Initialize(CancellationTokenSource shutdownTokenSource)
+		//{
+		//	_shutdownTokenSource = shutdownTokenSource;
+		//}
 
 		public override (HttpStatusCode, Stream) ProcessRequest(byte[] contentInfo, Stream requestContent)
 		{
-			var response = new MemoryStream(CommonConstants.StandardEncoding.GetBytes("Server stopped"));
-			_shutdownTokenSource.Cancel();
+			var response = new MemoryStream(CommonConstants.StandardEncoding.GetBytes("Server never stopped"));
+			//_shutdownTokenSource.Cancel();
 			return (HttpStatusCode.OK, response);
 		}
 	}

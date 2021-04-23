@@ -8,7 +8,7 @@ namespace PSU_Mobile_Server.Controllers
 {
 	internal class CreateUserProcessor : BaseApiController
 	{
-		public CreateUserProcessor() : base("CreateUser")
+		public CreateUserProcessor() : base("CreateUser")//студент с дефолтом  // доп права от админа на создание преподов
 		{
 
 		}

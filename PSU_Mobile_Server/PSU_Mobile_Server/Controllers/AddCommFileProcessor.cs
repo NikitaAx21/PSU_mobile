@@ -34,7 +34,7 @@ namespace PSU_Mobile_Server.Controllers
 				}
 
 
-				var statusCode = isFileInfoCorrect ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
+				var statusCode = isFileInfoCorrect ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
 
 				return (statusCode, Stream.Null);
 			}

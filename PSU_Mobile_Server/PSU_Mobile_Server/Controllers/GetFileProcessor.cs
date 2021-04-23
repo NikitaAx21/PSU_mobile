@@ -15,7 +15,7 @@ namespace PSU_Mobile_Server.Controllers
 
 		}
 
-		public override (HttpStatusCode, Stream) ProcessRequest(byte[] contentInfo, Stream requestContent)
+		public override (HttpStatusCode, Stream) ProcessRequest(byte[] contentInfo, Stream requestContent)// проверить на права препода для скачивания ДЗ
 		{
 			try
 			{
@@ -39,6 +39,7 @@ namespace PSU_Mobile_Server.Controllers
 
 				var statusCode = isFileInfoCorrect ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
 
+				//как передать имя??
 				return (statusCode, reqContent/*Stream.Null*/);
 			}
 			catch (Exception)
