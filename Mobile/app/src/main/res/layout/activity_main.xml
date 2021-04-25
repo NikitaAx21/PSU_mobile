@@ -8,15 +8,16 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/mainToolBar"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
         app:theme="@style/Theme.AppCompat.Light.NoActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/main_tool_bar_style">
+        <include layout="@layout/toolbar_info"
+            android:id="@+id/toolbar_info"
+            android:visibility="gone"/>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.constraintlayout.widget.ConstraintLayout
        android:layout_height="0dp"

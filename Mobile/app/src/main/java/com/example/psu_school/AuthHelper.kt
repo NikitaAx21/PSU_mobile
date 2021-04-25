@@ -15,7 +15,7 @@ class AuthHelper {
     fun getSuperUserInfo() : UserInfo {
         val userInfo = UserInfo()
         userInfo.Login = superUser
-        userInfo.PassHash = hashPassword(superPass)
+        userInfo.passHash = hashPassword(superPass)
         return userInfo
     }
 }

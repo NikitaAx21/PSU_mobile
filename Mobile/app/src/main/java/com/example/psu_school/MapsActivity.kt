@@ -17,6 +17,7 @@ import android.widget.*
 import androidx.core.app.ActivityCompat
 import com.example.psu_mobile.UserInfo
 import com.example.psu_school.R
+import com.example.psu_school.utilits.MAIN_ACTIVITY
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_maps.*
@@ -27,21 +28,33 @@ public class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var map: GoogleMap? = null
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private var lastKnownLocation: Location? = null
-    lateinit var mUserInfo : UserInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ){
-            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-            ActivityCompat.requestPermissions(this, permissions,0)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            val permissions = arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            )
+            ActivityCompat.requestPermissions(this, permissions, 0)
         }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        if(getString(R.string.google_maps_key).isEmpty()) {
+        if (getString(R.string.google_maps_key).isEmpty()) {
             Toast.makeText(this, "No API Key", Toast.LENGTH_LONG).show()
         }
         // Get the SupportMapFragment and request notification when the map is ready to be used.
@@ -62,38 +75,46 @@ public class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        mUserInfo = UserInfo()
         getDeviceLocation()
     }
 
     @SuppressLint("SetTextI18n")
-    private fun getDeviceLocation(){
+    private fun getDeviceLocation() {
         try {
-                val locationResult = fusedLocationProviderClient?.lastLocation
-                locationResult?.addOnCompleteListener(this) { task->
-                    if (task.isSuccessful) {
-                        lastKnownLocation = task.result
-                        lastKnownLocation?.let{
-                            map?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
-                            map?.addMarker(MarkerOptions().position(LatLng(it.latitude,it.longitude)).title("Вы здесь!"))
-                            map?.setOnMapClickListener(GoogleMap.OnMapClickListener {
-                               mUserInfo.Latitude = lastKnownLocation!!.latitude
-                               mUserInfo.Longitude = lastKnownLocation!!.longitude
-                                coordinates_text_name.setText("Широта: " + mUserInfo.Latitude.toString()
-                                        + " Долгота: " + mUserInfo.Longitude.toString())
-                            })
-                            send_coordinates_button.setOnClickListener { send_data_to_server() }
-                        }
-                    } else {
-                        map?.uiSettings?.isMyLocationButtonEnabled = false
+            val locationResult = fusedLocationProviderClient?.lastLocation
+            locationResult?.addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    lastKnownLocation = task.result
+                    lastKnownLocation?.let {
+                        map?.moveCamera(
+                            CameraUpdateFactory.newLatLng(
+                                LatLng(
+                                    it.latitude,
+                                    it.longitude
+                                )
+                            )
+                        )
+                        MAIN_ACTIVITY.mUserInfo.Latitude = lastKnownLocation!!.latitude
+                        MAIN_ACTIVITY.mUserInfo.Longitude = lastKnownLocation!!.longitude
+                        map?.addMarker(
+                            MarkerOptions().position(LatLng(it.latitude, it.longitude))
+                                .title("Вы здесь!")
+                        )
+                        send_coordinates_button.setOnClickListener { send_data_to_server() }
                     }
+                } else {
+                    map?.uiSettings?.isMyLocationButtonEnabled = false
                 }
+            }
         } catch (e: SecurityException) {
             //Log.e("Exception: %s", e.message, e)
         }
     }
 
     private fun send_data_to_server() {
-        show_toast("Отправка завершена")
+        coordinates_text_name.setText(
+            "Широта: " + MAIN_ACTIVITY.mUserInfo.Latitude.toString()
+                    + " Долгота: " + MAIN_ACTIVITY.mUserInfo.Longitude.toString()
+        )
     }
 }

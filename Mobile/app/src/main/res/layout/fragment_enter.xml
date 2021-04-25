@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackGround"
     tools:context="com.example.psu_school.userinterface.fragments.EnterFragment">
 
     <TextView
@@ -19,13 +20,15 @@
         android:id="@+id/register_input_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:digits="@string/edit_ascii_digits"
         app:layout_constraintTop_toBottomOf="@id/register_login_text"
-        style="@style/register_edit_style"
+        style="@style/mail_edit_style"
         android:autofillHints="" />
 
     <TextView
         android:id="@+id/register_password_text"
         android:text="@string/register_password_text"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/register_input_login"
@@ -33,20 +36,18 @@
 
     <EditText
         android:id="@+id/register_input_pass"
+        android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
+        android:digits="@string/edit_ascii_digits"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/register_password_text"
-        style="@style/register_edit_style" />
+        style="@style/mail_edit_style" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/register_input_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ico_register_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="@dimen/sett_horizont_margin"
-        android:contentDescription="TODO" />
+        style="@style/main_button_style" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

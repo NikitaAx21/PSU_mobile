@@ -25,7 +25,7 @@ android {
         }
 
         // Inject the Maps API key into the manifest
-        manifestPlaceholders = [ mapsApiKey : properties.getProperty("google_maps_key", "") ]
+        manifestPlaceholders = [mapsApiKey: properties.getProperty("google_maps_key", "")]
     }
 
     buildTypes {
@@ -72,4 +72,8 @@ dependencies {
     implementation "com.mikepenz:materialdrawer-nav:7.0.0"
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //Cropper
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+//Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

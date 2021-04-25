@@ -1,48 +1,53 @@
 package com.example.psu_school.userinterface.fragments
 
 import android.os.StrictMode
-import androidx.core.app.ActivityCompat.recreate
 import androidx.fragment.app.Fragment
 import com.example.psu_mobile.AuthHelper
 import com.example.psu_mobile.Request
 import com.example.psu_mobile.RequestProcessor
 import com.example.psu_mobile.UserInfo
-import com.example.psu_school.MainActivity
 import com.example.psu_school.R
+import com.example.psu_school.utilits.MAIN_ACTIVITY
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.android.synthetic.main.fragment_enter.*
+import utilits.hide_key_board
 import utilits.replace_fragment
+import utilits.set_toolbar_info
 import utilits.show_toast
 import java.io.ByteArrayInputStream
 import java.net.URL
 import kotlin.random.Random
 
-@Suppress("DEPRECATION")
 class EnterFragment : Fragment(R.layout.fragment_enter) {
     override fun onStart() {
         super.onStart()
-        register_input_button.setOnClickListener {send_auth_params()}
+        register_input_button.setOnClickListener { send_auth_params() }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        hide_key_board()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        set_toolbar_info(getString(R.string.drawer_enter_name))
     }
 
     private fun send_auth_params() {
-        if(register_input_login.text.toString().isEmpty()){
+        if (register_input_login.text.toString().isEmpty()) {
             show_toast(getString(R.string.register_toast_login))
-        }
-        else if(register_input_pass.text.toString().isEmpty()){
+        } else if (register_input_pass.text.toString().isEmpty()) {
             show_toast(getString(R.string.register_toast_pass))
-        }
-        else{
-            if(register_input_login.text.toString().equals((activity as MainActivity).mUserInfo.Login)
-                && register_input_pass.text.toString().equals((activity as MainActivity).mUserInfo.PassHash)){
-                (activity as MainActivity).mmyDrawer.createDrawer()
-                replace_fragment(NewsFragment())
-            }
-            else  show_toast(getString(R.string.login_or_pass_error))
+        } else {
+            //connectServer(register_input_login.text.toString(), register_input_pass.text.toString())
+            MAIN_ACTIVITY.mmyDrawer.createDrawer()
+            replace_fragment(WorkFragment())
         }
     }
 
-    fun sendPostRequestAsync() {
+    private fun connectServer(login: String, pass: String) {
         try {
             //TODO (Никита): Супер костыль - запуск в основном потоке. Нужно сделать асинхронным
             val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -50,12 +55,12 @@ class EnterFragment : Fragment(R.layout.fragment_enter) {
 
 //TODO (Никита): Ниже просто пример того, как должны будут устроены запросы. Пока не трогал их. Нужно вынести
             val authHelper = AuthHelper()
-            val pass = "SomePass"
+            val pass = pass
             val newUserInfo = UserInfo()
             newUserInfo.Login = "User_${Random.nextInt()}"
-            newUserInfo.PassHash = authHelper.hashPassword(pass)
+            newUserInfo.passHash = authHelper.hashPassword(pass)
 
-            val jsonAdapter =  Moshi.Builder().add(KotlinJsonAdapterFactory()).build().adapter(
+            val jsonAdapter = Moshi.Builder().add(KotlinJsonAdapterFactory()).build().adapter(
                 UserInfo::class.java
             )
             val reqContent = jsonAdapter.toJson(newUserInfo)
@@ -71,10 +76,9 @@ class EnterFragment : Fragment(R.layout.fragment_enter) {
             val response = RequestProcessor().sendRequest(req, seq, mURL)
 //TODO (Никита): пример получения текстового ответа. Файлы, конечно, в массивы байт перегонять не стоит
             val r = String(response.toByteArray())
-            println("Response : $r")
-        }
-        catch (e: NumberFormatException){
-            throw RuntimeException("fuck your: ", e)
+            show_toast("Response : $r")
+        } catch (e: NumberFormatException) {
+            throw RuntimeException("", e)
         }
     }
 }
