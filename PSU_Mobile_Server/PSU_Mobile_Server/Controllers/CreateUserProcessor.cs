@@ -18,6 +18,7 @@ namespace PSU_Mobile_Server.Controllers
 			try
 			{
 				var userInfo = JsonSerializer.DeserializeAsync<User>(requestContent).Result;
+
 				var isUserCreated = Auth.Instance.Value.TryAddUser(userInfo);
 				var statusCode = isUserCreated ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
 				return (statusCode, Stream.Null);

@@ -115,83 +115,90 @@ namespace PSU_Mobile_Server
 
 				Console.WriteLine("know thisUser");
 
-
-				List<Group> tmpGroupsList = new List<Group>();
-				List<User> tmpUserList = new List<User>();
-				tmpUserList.Add(thisUser);
-				Console.WriteLine(tmpUserList.Count);
-
-
-				Console.WriteLine($"  thisUser.ruledGroups  {thisUser.ruledGroups.Count}");
-				foreach (Guid groupID in thisUser.ruledGroups)
+				//============================
+				if (thisUser.UserName != CommonConstants.SuperUser)
 				{
-					var newgroup = BD.Groups.FirstOrDefault(u => u.ID == groupID);
-					if (newgroup == null)
-						continue;//return false; ??
 
-					Console.WriteLine($"newgroup  {newgroup.GroupName}");
+					List<Group> tmpGroupsList = new List<Group>();
+					List<User> tmpUserList = new List<User>();
+					tmpUserList.Add(thisUser);
+					Console.WriteLine(tmpUserList.Count);
 
-					tmpGroupsList.Add(newgroup);
-				}
 
-				//=============================
-
-				if (thisUser.ruledGroups.Count == 0)// если не руководит, то участвует
-				{
-					foreach (Group group in BD.Groups)
+					Console.WriteLine($"  thisUser.ruledGroups  {thisUser.ruledGroups.Count}");
+					foreach (Guid groupID in thisUser.ruledGroups)
 					{
-						var foundname = group.UserLogins.FirstOrDefault(u => u == UserName);
-						if ((foundname == null) || (foundname != UserName))
-							continue;
+						var newgroup = BD.Groups.FirstOrDefault(u => u.ID == groupID);
+						if (newgroup == null)
+							continue;//return false; ??
 
+						Console.WriteLine($"newgroup  {newgroup.GroupName}");
 
-						Console.WriteLine($"group  {group.GroupName}");
-
-						tmpGroupsList.Add(group);
+						tmpGroupsList.Add(newgroup);
 					}
-				}
 
-				tmpDB.Groups = tmpGroupsList;
+					//=============================
 
-				Console.WriteLine("Groups done");
-
-				//=============================
-
-				foreach (Group group in tmpDB.Groups)// добавлять только нужную инфу о юзерах??
-				{
-					foreach (string userlogin in group.UserLogins)
+					if (thisUser.ruledGroups.Count == 0)// если не руководит, то участвует
 					{
-
-						Console.WriteLine($"userlogin  {userlogin}");
-
-
-						var tmpuser = BD.Users.FirstOrDefault(u => u.UserName == userlogin);
-						if ((tmpuser == null))
-							continue;
+						foreach (Group group in BD.Groups)
+						{
+							var foundname = group.UserLogins.FirstOrDefault(u => u == UserName);
+							if ((foundname == null) || (foundname != UserName))
+								continue;
 
 
-						// обнулять ли PasswordHash PermittedCommands ruledGroups
-						/*
-						 
-						 	var userInfo = new User//Info
+							Console.WriteLine($"group  {group.GroupName}");
+
+							tmpGroupsList.Add(group);
+						}
+					}
+
+					tmpDB.Groups = tmpGroupsList;
+
+					Console.WriteLine("Groups done");
+
+					//=============================
+
+					foreach (Group group in tmpDB.Groups)// добавлять только нужную инфу о юзерах??
+					{
+						foreach (string userlogin in group.UserLogins)
+						{
+
+							Console.WriteLine($"userlogin  {userlogin}");
+
+
+							var tmpuser = BD.Users.FirstOrDefault(u => u.UserName == userlogin);
+							if ((tmpuser == null))
+								continue;
+
+
+							// обнулять PasswordHash PermittedCommands ruledGroups
+
+							var userInfo = new User
 							{
-
-								ID=tmpuser.ID, // конструктор
+								ID = tmpuser.ID,
 								UserName = tmpuser.UserName,
-								Name =tmpuser.Name,
-								Surname=tmpuser.Surname
-
+								Name = tmpuser.Name,
+								Surname = tmpuser.Surname
 							};
 
-						 */
 
-
-
-						tmpUserList.Add(tmpuser);
+							tmpUserList.Add(userInfo);
+						}
 					}
-				}
 
-				tmpDB.Users = tmpUserList;
+					tmpDB.Users = tmpUserList;
+				}
+				else
+				{
+
+					tmpDB = new DataBase()
+					{
+						Users = BD.Users,
+						Groups = BD.Groups
+					};
+				}
 
 				return true;
 			}
@@ -242,11 +249,6 @@ namespace PSU_Mobile_Server
 
 					Name = newUser.Name,
 					Surname = newUser.Surname,
-
-					// Надо ли
-					PermittedCommands = newUser.PermittedCommands,//??
-
-					ruledGroups = newUser.ruledGroups//??
 				});
 
 				return true;
@@ -264,13 +266,17 @@ namespace PSU_Mobile_Server
 				if (userForUpd == null)
 					return false;
 
-				userForUpd.PasswordHash = AuthHelper.HashPassword(user.PasswordHash);// хэш ли?
+				if(user.PasswordHash!=null)
+					userForUpd.PasswordHash = AuthHelper.HashPassword(user.PasswordHash);// хэш ли?
 
-				userForUpd.Name = user.Name;
-				userForUpd.Surname = user.Surname;
+				if (user.Name != null)
+					userForUpd.Name = user.Name;
 
-				userForUpd.PermittedCommands = user.PermittedCommands;
-				userForUpd.ruledGroups = user.ruledGroups;
+				if (user.Surname != null)
+					userForUpd.Surname = user.Surname;
+
+				if (user.ruledGroups.Count!=0)
+					userForUpd.ruledGroups = user.ruledGroups;
 
 				return true;
 			}
@@ -305,6 +311,106 @@ namespace PSU_Mobile_Server
 				return true;
 			}
 		}
+
+
+
+		public bool TryToPromote(Guid ID)
+		{
+			lock (Lock)
+			{
+				if (ID==Guid.Empty)
+					return false;
+
+				var userForPromoting= BD.Users.FirstOrDefault(u => u.ID == ID);
+				if (userForPromoting == null)
+					return false;
+
+				if(userForPromoting.PermittedCommands.Contains("AddCommFile"))
+					return false;
+
+				userForPromoting.PermittedCommands = AddTeacherPermissions();
+
+				return true;
+			}
+		}
+
+
+
+
+
+
+
+
+		public bool TryToDemote(Guid ID)
+		{
+			lock (Lock)
+			{
+				if (ID == Guid.Empty)
+					return false;
+
+				var userForDemoting = BD.Users.FirstOrDefault(u => u.ID == ID);
+				if (userForDemoting == null)
+					return false;
+
+				if (!userForDemoting.PermittedCommands.Contains("AddCommFile"))
+					return false;
+
+				userForDemoting.PermittedCommands = AddBasicPermissions();
+
+				return true;
+			}
+		}
+
+
+
+
+		public List<string> AddBasicPermissions()
+		{
+			lock (Lock)
+			{
+				List<string> Commands = new List<string>();
+
+				Commands.Add("GetBD");
+
+				Commands.Add("AddHWFile");
+
+				Commands.Add("GetFile");
+
+				return Commands;
+			}
+		}
+
+
+
+		public List<string> AddTeacherPermissions()
+		{
+			lock (Lock)
+			{
+				List<string> Commands = new List<string>();
+
+				Commands.AddRange(AddBasicPermissions());
+
+				Commands.Add("AddCommFile");
+
+				Commands.Add("AddLesson");
+
+				Commands.Add("DelLesson");
+
+				Commands.Add("GetGroup");//--
+
+				Commands.Add("GetLesson");//--
+
+				Commands.Add("UpdGroup");
+
+				Commands.Add("UpdLesson");
+
+
+				return Commands;
+			}
+		}
+
+
+
 
 		//==============================================================
 
@@ -343,11 +449,12 @@ namespace PSU_Mobile_Server
 
 				if (groupForUpd == null)
 					return false;
-				
-				groupForUpd.GroupName = group.GroupName;
-				//groupForUpd.Lessons = group.Lessons;//??
-				groupForUpd.UserLogins = group.UserLogins;
-				//groupForUpd.CommonFilesLinks = group.CommonFilesLinks;
+
+				if(group.GroupName!=null)
+					groupForUpd.GroupName = group.GroupName;
+
+				if (group.UserLogins.Count != 0)
+					groupForUpd.UserLogins = group.UserLogins;
 
 				return true;
 			}
@@ -390,6 +497,9 @@ namespace PSU_Mobile_Server
 			lock (Lock)
 			{
 				var groupForLesson = BD.Groups.FirstOrDefault(u => u.ID == currentGroup);
+				Console.WriteLine($" groupForLesson {groupForLesson.GroupName} ");
+
+				Console.WriteLine($" newLesson TopicName {newLesson.TopicName} ");
 
 				if (groupForLesson == null)
 					return false;
@@ -403,9 +513,6 @@ namespace PSU_Mobile_Server
 					TopicName = newLesson.TopicName,
 					TestFlag = newLesson.TestFlag,
 					Date = newLesson.Date,
-					//LessonFilesLinks = newLesson.LessonFilesLinks,
-					//HomeWorkFilesLinks = newLesson.HomeWorkFilesLinks,// ??
-					Presence = newLesson.Presence
 				});
 
 				return true;
@@ -500,7 +607,7 @@ namespace PSU_Mobile_Server
 
 
 
-				if (!user.ruledGroups.Contains(paramInfo.groupID))
+				if ((!user.ruledGroups.Contains(paramInfo.groupID)) && (user.UserName!=CommonConstants.SuperUser))
 					return false;
 
 
@@ -511,7 +618,7 @@ namespace PSU_Mobile_Server
 				if (group == null)
 					return false;
 
-				newPath = group.GroupName+"/";//??
+				newPath = group.GroupName + "/";//??
 
 
 				var lesson = group.Lessons.FirstOrDefault(u => u.ID == paramInfo.lessonID);
@@ -522,22 +629,22 @@ namespace PSU_Mobile_Server
 						newPath += lesson.TopicName + "/";
 				}
 
-				newPath += "/common/"+ paramInfo.filename;
+				newPath += "common/";
 
 
 				if (paramInfo.lessonID != Guid.Empty)//??
 				{
-					if (lesson.LessonFilesLinks.Contains(newPath))
+					if (lesson.LessonFilesLinks.Contains(newPath + paramInfo.filename))
 						return false;
 
-					lesson.LessonFilesLinks.Add(newPath);
+					lesson.LessonFilesLinks.Add(newPath + paramInfo.filename);
 				}
 				else
 				{
-					if (group.CommonFilesLinks.Contains(newPath))
+					if (group.CommonFilesLinks.Contains(newPath+ paramInfo.filename))
 						return false;
 
-					group.CommonFilesLinks.Add(newPath);
+					group.CommonFilesLinks.Add(newPath + paramInfo.filename);
 				}
 
 				return true;
@@ -545,9 +652,9 @@ namespace PSU_Mobile_Server
 		}
 
 
-		public bool TryGetHWFilePath(FileProcessorInfo paramInfo, out string newPath)//
+		public bool TryGetHWFilePath(FileProcessorInfo paramInfo, out string newPath)//проверка на принадлежность группе...
 		{
-			lock (Lock)//второй лок
+			lock (Lock)
 			{
 				newPath = "";
 
@@ -569,18 +676,15 @@ namespace PSU_Mobile_Server
 					return false;
 
 
-
-				newPath += group.GroupName + "/"+lesson.TopicName +"/"+ user.UserName + "/common/";
-
-				newPath += paramInfo.filename;
+				newPath += group.GroupName + "/"+lesson.TopicName +"/"+ user.UserName + "/";
 
 
-				if (lesson.LessonFilesLinks.Contains(newPath))
+				if (lesson.LessonFilesLinks.Contains(newPath+ paramInfo.filename))
 					return false;
 
 
 				/*перенос в процессор?	добавление в группы и занятия*/
-				lesson.LessonFilesLinks.Add(newPath);
+				lesson.LessonFilesLinks.Add(newPath+ paramInfo.filename);
 
 				return true;
 			}

@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Common;
+using System.Text;
 
 namespace PSU_Mobile_Server.Controllers
 {
@@ -18,7 +19,9 @@ namespace PSU_Mobile_Server.Controllers
 		{
 			try
 			{
-				Guid currentGroup = new Guid(contentInfo);// !!! группа в которую добавляем
+				var asd = CryptHelper.Decrypt(CryptHelper.MasterPass, contentInfo/*string.Empty*/).Result;
+
+				Guid currentGroup = Guid.Parse(asd);// !!! группа в которую добавляем
 
 				var lessonInfo = JsonSerializer.DeserializeAsync<Lesson>(requestContent).Result;
 				var isLessonCreated = Auth.Instance.Value.TryAddLesson(currentGroup,lessonInfo);

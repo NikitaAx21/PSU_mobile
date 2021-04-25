@@ -18,16 +18,30 @@ namespace PSU_Mobile_Server.Controllers
 		{
 			try
 			{
-				var paramInfo = JsonSerializer.Deserialize<FileProcessorInfo>(contentInfo);
+				Console.WriteLine($" WTF ");
+
+				var asd = CryptHelper.Decrypt(CryptHelper.MasterPass, contentInfo/*string.Empty*/).Result;
+
+
+				Console.WriteLine($" AddCommFile {asd} ");
+
+
+				var paramInfo = JsonSerializer.Deserialize<FileProcessorInfo>(asd);
+
 
 				string newPath;
 				var isFileInfoCorrect = Auth.Instance.Value.TryGetHWFilePath(paramInfo, out newPath);
+
+
+				Console.WriteLine($" AddCommFile {isFileInfoCorrect} ");
+
+
 
 				if (isFileInfoCorrect)
 				{
 					Directory.CreateDirectory($".//server/{newPath}");//
 
-					using var writeStream = File.OpenWrite($".//server/{newPath}");
+					using var writeStream = File.OpenWrite($".//server/{newPath}{paramInfo.filename}");
 					requestContent.CopyTo(writeStream);
 				}
 

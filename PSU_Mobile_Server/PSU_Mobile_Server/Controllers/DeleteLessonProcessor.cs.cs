@@ -17,7 +17,12 @@ namespace PSU_Mobile_Server.Controllers
 		{
 			try
 			{
-				Guid currentGroup = new Guid(contentInfo);// !!! группа в которую добавляем
+
+				var asd = CryptHelper.Decrypt(CryptHelper.MasterPass, contentInfo/*.*/).Result;
+
+				Guid currentGroup = Guid.Parse(asd);
+
+
 
 
 				var lessonID = JsonSerializer.DeserializeAsync<Lesson>(requestContent).Result.ID;// ID !!
@@ -25,8 +30,8 @@ namespace PSU_Mobile_Server.Controllers
 				var isLessonDeleted = Auth.Instance.Value.TryDeleteLesson(currentGroup, lessonID);
 
 
-				var statusCode = isLessonDeleted ? HttpStatusCode.Created/*?*/ : HttpStatusCode.InternalServerError;
-				return (statusCode, Stream.Null);// ответ ??
+				var statusCode = isLessonDeleted ? HttpStatusCode.OK/*?*/ : HttpStatusCode.InternalServerError;
+				return (statusCode, Stream.Null);
 			}
 			catch (Exception)
 			{

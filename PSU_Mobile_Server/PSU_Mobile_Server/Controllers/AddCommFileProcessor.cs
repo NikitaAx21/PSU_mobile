@@ -19,22 +19,21 @@ namespace PSU_Mobile_Server.Controllers
 		{
 			try
 			{
-				var paramInfo = JsonSerializer.Deserialize<FileProcessorInfo>(contentInfo);
+				var asd = CryptHelper.Decrypt(CryptHelper.MasterPass, contentInfo/*string.Empty*/).Result;
+
+				var paramInfo = JsonSerializer.Deserialize<FileProcessorInfo>(asd);
 
 				string newPath;
 				var isFileInfoCorrect = Auth.Instance.Value.TryGetCommFilePath(paramInfo, out newPath);
 
-
 				if (isFileInfoCorrect)
 				{
 					Directory.CreateDirectory($".//server/{newPath}");//
-					//var fileName = paramInfo.filename;
-					using var writeStream = File.OpenWrite($".//server/{newPath}");
+					using var writeStream = File.OpenWrite($".//server/{newPath}{paramInfo.filename}");
 					requestContent.CopyTo(writeStream);
 				}
 
-
-				var statusCode = isFileInfoCorrect ? HttpStatusCode.OK : HttpStatusCode.InternalServerError;
+				var statusCode = isFileInfoCorrect ? HttpStatusCode.Created : HttpStatusCode.InternalServerError;
 
 				return (statusCode, Stream.Null);
 			}
