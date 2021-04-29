@@ -6,11 +6,10 @@
     <string name="default_user_name">Имя Фамилия</string>
     <string name="default_group">Группа</string>
     <string name="settings_text_acc">Учетная запись</string>
-    <string name="default_group_sett">Ваша группа. Нажмите для изменения</string>
-    <string name="sett_username_text">Имя. Нажмите для изменения</string>
-    <string name="settings_secname">Фамилия. Нажмите для изменения</string>
-    <string name="settings_futhname">Отчество. Нажмите для изменения</string>
-    <string name="settings_usermail">Почта. Нажмите для изменения</string>
+    <string name="settings_username">Имя</string>
+    <string name="settings_surname">Фамилия</string>
+    <string name="settings_midname">Отчество</string>
+    <string name="settings_usermail">Почта</string>
     <string name="settings_action_exit">Выход</string>
     <string name="settings_action_quest">Помощь</string>
     <string name="register_login_text">Введите логин:</string>
@@ -26,11 +25,45 @@
     <string name="mail_message_err">Введите сообщение</string>
     <string name="mail_chooser_text">Отправка почты</string>
     <string name="mail_chooser_err">Ошибка отправления. Убедитесь, что все поля заполнены правильно.
-        Файл должен быть расположен в Storage, и к нему должен быть предоставлен доступ</string>
+        Убедитесь, что у приложения есть доступ к файлу</string>
     <string name="mail_file_text">Прикрепленный файл:</string>
     <string name="mail_file_err">Возникли проблемы с доступом к файлу</string>
     <string name="add_file_text">Выберите файл</string>
     <string name="sett_save_change_text">Настройки изменены</string>
     <string name="login_or_pass_error">Неверный логин или пароль</string>
     <string name="photo_data_text">Данные:</string>
+    <string name="no_server_text">Не удалось подключиться к серверу</string>
+    <string name="tool_bar_info_text" />
+    <string name="drawer_work_name">Домашняя работа</string>
+    <string name="drawer_time_table_name">Расписание</string>
+    <string name="drawer_home_work_name">Домашняя работа</string>
+    <string name="drawer_mail_name">Почта</string>
+    <string name="drawer_qr_code_name">QR-код сканер</string>
+    <string name="drawer_map_name">Мое местоположение</string>
+    <string name="drawer_settings_name">Настройки</string>
+    <string name="sett_user_photo_crop_err">Ошибка кадрирования</string>
+    <string name="sett_change_photo_err">Ошибка при добавдении изображения</string>
+    <string name="change_user_photo_text">Изображение пользователя изменено</string>
+    <string name="sett_change_sett_text">Изменение настроек</string>
+    <string name="change_sett_err">Вы пытаетесь сохранить пустое значение</string>
+    <string name="drawer_change_sett">Изменение параметра</string>
+    <string name="set_string_err">Некорректно введенные данные</string>
+    <string name="drawer_enter_name">Авторизация</string>
+    <string name="QR_code_not_found_text">QR-код не найден</string>
+    <string name="settings_text_auth">Авторизация</string>
+    <string name="sett_set_old_pass">Пожалуйста, введите старый пароль</string>
+    <string name="sett_old_pass_err">Пароль неправильно введен</string>
+    <string name="sett_string_ok">Данные изменены</string>
+    <string name="sett_old_pass_text">Старый пароль</string>
+    <string name="sett_new_pass_text">Новый пароль</string>
+    <string name="edit_ascii_digits">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^*?1234567890</string>
+    <string name="sett_new_pass_input_hint">Введите новый пароль</string>
+    <string name="sett_old_pass_input_hint">Введите старый пароль</string>
+    <string name="edit_kirill_and_lat_digits">-йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ
+        abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+    </string>
+    <string name="edit_digits_for_group">-йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮ abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</string>
+    <string name="qr_text_label_text">Считанное значение:</string>
+    <string name="qr_scanner_link_err">Считанное значение не является ссылкой</string>
+    <string name="qr_link_no_safe_text">Соединение не защищено. Продолжить?</string>
 </resources>

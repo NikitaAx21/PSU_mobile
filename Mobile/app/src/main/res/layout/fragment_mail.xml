@@ -4,99 +4,98 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackGround"
     tools:context=".userinterface.MailFragment">
 
     <TextView
         android:id="@+id/mail_send_to_text"
+        style="@style/settings_label_style"
+        android:layout_marginTop="@dimen/sett_group_margin_top"
         android:text="@string/mail_send_to_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/sett_group_margin_top"
-        style="@style/settings_label_style"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/mail_send_to_input"
+        style="@style/mail_edit_style"
+        android:autofillHints=""
+        android:lines="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mail_send_to_text"
-        style="@style/mail_edit_style"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@id/mail_send_to_text" />
 
     <TextView
         android:id="@+id/mail_subject_text"
+        style="@style/settings_label_style"
+        android:layout_marginTop="@dimen/sett_group_margin_top"
         android:text="@string/mail_subject_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mail_send_to_input"
-        android:layout_marginTop="@dimen/sett_group_margin_top"
-        style="@style/settings_label_style"/>
+        app:layout_constraintTop_toBottomOf="@+id/mail_send_to_input" />
 
     <EditText
         android:id="@+id/mail_subject_input"
+        style="@style/mail_edit_style"
+        android:autofillHints=""
+        android:lines="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mail_subject_text"
-        style="@style/mail_edit_style"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/mail_subject_text" />
 
     <TextView
         android:id="@+id/mail_message_text"
+        style="@style/settings_label_style"
+        android:layout_marginTop="@dimen/sett_group_margin_top"
         android:text="@string/mail_message_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mail_subject_input"
-        android:layout_marginTop="@dimen/sett_group_margin_top"
-        style="@style/settings_label_style"/>
+        app:layout_constraintTop_toBottomOf="@+id/mail_subject_input" />
 
     <EditText
         android:id="@+id/mail_message_input"
+        style="@style/mail_edit_style"
+        android:autofillHints=""
+        android:lines="5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mail_message_text"
-        style="@style/mail_edit_style"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/mail_message_text" />
 
     <TextView
         android:id="@+id/mail_file_text"
+        style="@style/settings_label_style"
+        android:layout_marginTop="@dimen/sett_group_margin_top"
         android:text="@string/mail_file_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mail_message_input"
-        android:layout_marginTop="@dimen/sett_group_margin_top"
-        style="@style/settings_label_style"/>
+        app:layout_constraintTop_toBottomOf="@+id/mail_message_input" />
 
     <TextView
         android:id="@+id/mail_file_name"
-        android:text=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mail_file_text"
+        style="@style/settings_label_style"
+        android:layout_width="@dimen/mail_file_name_width"
         android:layout_marginTop="@dimen/sett_group_margin_top"
         android:inputType="textMultiLine"
-        style="@style/settings_label_style"
-        android:layout_width = "@dimen/mail_file_name_width"/>
+        android:text=""
+        android:padding="@dimen/mail_file_name_padding"
+        android:gravity="center"
+        android:background="@drawable/background_file_warp_item"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mail_file_text" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_mail_file_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorPrimary"
+        style="@style/main_button_style"
         android:src="@drawable/ico_add_mail_file"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="@dimen/sett_horizont_margin"
-        android:contentDescription="TODO" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/send_mail_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/sett_horizont_margin"
-        android:backgroundTint="@color/colorPrimary"
-        android:contentDescription="TODO"
+        style="@style/main_button_style"
         android:src="@drawable/ico_send_mail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,17 +7,17 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class RequestProcessor {
-    fun sendRequest(req:Request, content: InputStream, mURL: URL) : ByteArrayOutputStream {
-        try
-        {
+    fun sendRequest(req: Request, content: InputStream, mURL: URL): ByteArrayOutputStream {
+        try {
             val jsonAdapter = Moshi.Builder()
-                    .add(KotlinJsonAdapterFactory())
-                    .build()
-                    .adapter(Request::class.java)
+                .add(KotlinJsonAdapterFactory())
+                .build()
+                .adapter(Request::class.java)
             val serializedRequest = jsonAdapter.toJson(req)
             val cryptoHelper = CryptoHelper()
 
-            val encrypted = cryptoHelper.encryptAndBase64(serializedRequest, cryptoHelper.masterpass)
+            val encrypted =
+                cryptoHelper.encryptAndBase64(serializedRequest, cryptoHelper.masterpass)
             //TODO (Никита): нужно добавить нормальную обработку ошибок и статус-кодов
             with(mURL.openConnection() as HttpURLConnection) {
                 return try {
@@ -28,15 +28,13 @@ class RequestProcessor {
 
                     var response = ByteArrayOutputStream()
                     cryptoHelper.decrypt(inputStream, cryptoHelper.masterpass, response)
-                    response
+                    return response
                 } catch (e: Exception) {
                     println("Response : $e")
                     null!!
                 }
             }
-        }
-        catch (e: Exception)
-        {
+        } catch (e: Exception) {
             println("Response : $e")
         }
         return null!!

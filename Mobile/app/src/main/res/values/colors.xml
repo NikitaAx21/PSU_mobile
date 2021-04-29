@@ -12,4 +12,6 @@
     <color name="colorPrimaryDark">#8c2626</color>
     <color name="colorMiddle">#CD5C5C</color>
     <color name="colorAccent">#ffffff</color>
+    <color name="colorRedLight">#ed7e7e</color>
+    <color name="colorBackGround">#e0a6a6</color>
 </resources>

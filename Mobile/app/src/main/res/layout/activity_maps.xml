@@ -39,14 +39,10 @@
         android:gravity="center">
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/send_coordinates_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorPrimary"
             android:src="@drawable/ico_edit_location"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_margin="@dimen/sett_horizont_margin"
-            android:contentDescription="TODO" />
+            style="@style/main_button_style"/>
     </LinearLayout>
 
 </RelativeLayout>

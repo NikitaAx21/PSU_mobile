@@ -14,7 +14,11 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18"/>
+
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -27,8 +31,8 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppThemeLight">
-        <activity android:name=".utilits.photoActivity"></activity>
+        android:theme="@style/AppThemeLight"
+        android:requestLegacyExternalStorage="true">
         <activity android:name=".userinterface.MailActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -54,6 +58,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
 
         <activity
             android:name=".MainActivity"
